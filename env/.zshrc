@@ -14,7 +14,6 @@ export ZSH="$HOME/.oh-my-zsh"
 export OPENSSL_DIR=$(brew --prefix openssl)
 
 # CONFIGURATOR UI
-export NPM_TOKEN=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
 export NVM_DIR=~/.nvm
 export DOCKER_HOST_IP=localhost
 source $(brew --prefix nvm)/nvm.sh
