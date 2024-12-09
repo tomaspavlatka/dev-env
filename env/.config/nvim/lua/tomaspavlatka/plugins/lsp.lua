@@ -69,6 +69,39 @@ return {
         lst({ "", "}" }),
       }),
 
+      lss("tetest", {
+        lst({ "describe('" }),
+        lsi(1, "test"),
+        lst({ "', () => {" }),
+        lst({ "", "  beforeEach(() => {})" }),
+        lst({ "", "  it('returns ...  when ...', () => {" }),
+        lst({ "", "    const value = 1;" }),
+        lst({ "", "    const response = value;" }),
+        lst({ "", "    expect(response.isRight()).toBeTruthy();" }),
+        lst({ "", "  });" }),
+        lst({ "", "});" }),
+      }),
+
+
+      lss("tefixture", {
+        lst({ "import { Fixture } from './fixture.dto';" }),
+        lst({ "", "", "export class " }),
+        lsi(1, "Fixture"),
+        lst({ "Fixture {" }),
+        lst({ "", "  static create(overwrites: Partial<" }),
+        lsrep(1),
+        lst({ "> = {}) {" }),
+        lst({ "", "    const defaults: "}),
+        lsrep(1),
+        lst({" = {" }),
+        lst({ "", "    }" }),
+        lst({ "", "    return Fixture.createFixture(" }),
+        lsrep(1),
+        lst({ ", defaults, overwrites);" }),
+        lst({ "", "  }" }),
+        lst({ "", "}" }),
+      }),
+
       lss("tedto", {
         lst({ "import { plainToInstance } from 'class-transformer';", "", "export class " }),
         lsi(1, "Dto"),
