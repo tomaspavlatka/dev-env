@@ -82,9 +82,8 @@ return {
         lst({ "", "});" }),
       }),
 
-
       lss("tefixture", {
-        lst({ "import { Fixture } from './fixture.dto';" }),
+        lst({ "import { Fixture } from '@common/_fixtures/fixture.dto';" }),
         lst({ "", "", "export class " }),
         lsi(1, "Fixture"),
         lst({ "Fixture {" }),
