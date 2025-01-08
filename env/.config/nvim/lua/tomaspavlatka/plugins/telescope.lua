@@ -29,6 +29,15 @@ return {
       mode = { "n" }
     },
     {
+      '<leader>lf',
+      function()
+        require('telescope.builtin').find_files({
+          cwd = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy")
+        })
+      end,
+      mode = { "n" }
+    },
+    {
       '<leader>ff',
       function() require('telescope.builtin').git_files() end,
       mode = { "n" }
