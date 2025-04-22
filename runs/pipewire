@@ -1,0 +1,8 @@
+# Install PipeWire and dependencies
+sudo pacman -S pipewire pipewire-audio pipewire-alsa pipewire-pulse pipewire-jack
+
+# Enable PipeWire and its session manager
+systemctl --user enable pipewire
+systemctl --user start pipewire
+systemctl --user enable pipewire-pulse
+systemctl --user start pipewire-pulse
