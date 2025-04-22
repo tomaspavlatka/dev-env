@@ -14,9 +14,10 @@ ZSH_THEME="robbyrussell"
 # Aliases
 alias v="/usr/bin/nvim"
 alias vim="/usr/bin/nvim"
-alias vol:up="amixer set Master 10%+"
-alias vol:down="amixer set Master 10%-"
-alias vol:mute="amixer set Master toggle"
+
+alias vol:up="wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+"
+alias vol:down="wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-"
+alias vol:mute="wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
 alias tab:rename="wezterm cli set-tab-title "
 alias wifi:office="nmcli connection up Father\ loves\ you\ 5G"
 alias wifi:room="nmcli connection up HOLY\ SPIRIT\ loves\ you"

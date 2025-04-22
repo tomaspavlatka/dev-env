@@ -6,3 +6,5 @@ systemctl --user enable pipewire
 systemctl --user start pipewire
 systemctl --user enable pipewire-pulse
 systemctl --user start pipewire-pulse
+
+sudo pacman -S wireplumber
