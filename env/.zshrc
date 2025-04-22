@@ -20,7 +20,7 @@ alias vol:mute="amixer set Master toggle"
 alias tab:rename="wezterm cli set-tab-title "
 alias wifi:office="nmcli connection up Father\ loves\ you\ 5G"
 alias wifi:room="nmcli connection up HOLY\ SPIRIT\ loves\ you"
-alias wifi:living="nmcli connection up JESUS\ loves\ you"
+alias wifi:living="nmcli connection up JESUS\ loves\ you\ 5G"
 alias wifi:vpn="nmcli connection up zolar-vpn-access --ask"
 
 alias grw:t="gradle test"
