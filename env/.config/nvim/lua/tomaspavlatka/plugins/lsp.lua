@@ -32,19 +32,39 @@ return {
       ensure_installed = {
         "lua_ls",
         "rust_analyzer",
+        "intelephense"
       },
       handlers = {
-        function(server_name) -- default handler (optional)
-          require("lspconfig")[server_name].setup {
+        function(server_name)
+          local opts = {
             capabilities = capabilities,
-            settings = {
+          }
+
+          if server_name == "intelephense" then
+            opts.settings = {
+              intelephense = {
+                environment = {
+                  includePaths = {
+                    "vendor/doctrine/orm/lib", -- for ORM attributes
+                    "vendor/symfony",          -- general Symfony
+                  },
+                },
+                files = {
+                  maxSize = 5000000, -- in case you hit large file limits
+                },
+              },
+            }
+          elseif server_name == "lua_ls" then
+            opts.settings = {
               Lua = {
                 diagnostics = {
                   globals = { "vim" },
                 },
               },
-            },
-          }
+            }
+          end
+
+          require("lspconfig")[server_name].setup(opts)
         end,
       }
     })
@@ -52,8 +72,8 @@ return {
 
     vim.diagnostic.config({
       virtual_text = true, -- you can keep this true or false, up to you
-      signs = true,    -- show signs in the gutter
-      underline = true, -- underline the problem
+      signs = true,        -- show signs in the gutter
+      underline = true,    -- underline the problem
       update_in_insert = false,
       severity_sort = true,
       float = {
