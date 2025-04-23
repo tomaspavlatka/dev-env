@@ -62,6 +62,7 @@ copy() {
 
 update_files $DEV_ENV/env/.config $XDG_CONFIG_HOME
 copy $DEV_ENV/env/.config/zoomus.conf $HOME/.config/zoomus.conf
+copy $DEV_ENV/env/.config/autostart $HOME/.config/autostart
 copy $DEV_ENV/env/.wezterm.lua $HOME/.wezterm.lua
 copy $DEV_ENV/env/.zshrc $HOME/.zshrc
 
