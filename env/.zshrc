@@ -27,6 +27,7 @@ alias grw:ttc="gradle test --continuous --tests "
 alias grw:b="gradle build"
 alias grw:br="gradle bootRun"
 alias grw:brc="gradle bootRun --continuous"
+alias pbcopy="xclip -selection clipboard"
 
 # Inspired here: https://catalins.tech/zsh-plugins/
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting you-should-use)
