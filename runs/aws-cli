@@ -1,2 +1,0 @@
-sudo pacman -S aws-cli
-yay -S aws-session-manager-plugin
