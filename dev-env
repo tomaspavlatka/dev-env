@@ -2,7 +2,7 @@
 real_run="0"
 
 XDG_CONFIG_HOME=$HOME/.config
-DEV_ENV=$HOME/codebase/personal/ptx-gyg-dev-env
+DEV_ENV=$HOME/codebase/personal/dev-env
 
 if [[ $1 == "--real" ]]; then
     real_run="1"
