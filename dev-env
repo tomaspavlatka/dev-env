@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+real_run="0"
+
+XDG_CONFIG_HOME=$HOME/.config
+DEV_ENV=$HOME/codebase/personal/ptx-gyg-dev-env
+
+if [[ $1 == "--real" ]]; then
+    real_run="1"
+fi
+
+log() {
+    if [[ $real_run == "1" ]]; then
+        echo "$1"
+    else
+        echo "[DRY_RUN]: $1"
+    fi
+}
+
+log "env: $DEV_ENV"
+
+update_files() {
+    log "copying over files from: $1"
+    pushd $1 &> /dev/null
+    (
+        configs=`find . -mindepth 1 -maxdepth 1 -type d`
+        for c in $configs; do
+            directory=${2%/}/${c#./}
+            log "    removing: rm -rf $directory"
+
+            if [[ $real_run == "1" ]]; then
+                rm -rf $directory
+            fi
+
+            log "    copying env: cp $c $2"
+            if [[ $real_run == "1" ]]; then
+                cp -r ./$c $2
+            fi
+        done
+
+    )
+    popd &> /dev/null
+}
+
+copy() {
+    log "removing: $2"
+    if [[ $real_run == "1" ]]; then
+        rm $2
+    fi
+    log "copying: $1 to $2"
+    if [[ $real_run == "1" ]]; then
+        cp $1 $2
+    fi
+}
+
+update_files $DEV_ENV/env/.config $XDG_CONFIG_HOME
+
+# Get those config files into ~/
+copy $DEV_ENV/env/.zshrc $HOME/.zshrc
+copy $DEV_ENV/env/.wezterm.lua $HOME/.wezterm.lua
+copy $DEV_ENV/env/.claude-init.sh $HOME/.claude-init.sh
+copy $DEV_ENV/env/intelephense/licence.txt $HOME/intelephense/licence.txt

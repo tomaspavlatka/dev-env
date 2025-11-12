@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+script_dir=" $( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
+
+grep=""
+real_run="0"
+
+while [[ $# -gt 0 ]]; do
+    echo "ARG: \"$1\""
+    if [[ "$1" == "--real" ]]; then
+        real_run="1"
+    else
+        grep="$1"
+    fi
+    shift
+done
+
+log() {
+  if [[ $real_run == "1" ]]; then
+    echo "$1"
+  else
+    echo "[DRY_RUN]: $1"
+  fi
+}
+
+log "RUN: env: $env -- grep: $grep -- script_dir: $script_dir"
+
+run_dirs=`find $script_dir/run -mindepth 1 -maxdepth 1 -perm +111`
+
+for s in $run_dirs; do
+  if basename $s | grep -vq "$grep"; then
+    log "grep \"$grep\" filtered out $s"
+    continue
+  fi
+
+  log "running script: $s"
+
+ if [[ $real_run == "1" ]]; then
+    $s
+  fi
+done
