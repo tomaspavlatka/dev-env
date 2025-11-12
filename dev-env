@@ -56,6 +56,3 @@ update_files $DEV_ENV/env/.config $XDG_CONFIG_HOME
 
 # Get those config files into ~/
 copy $DEV_ENV/env/.zshrc $HOME/.zshrc
-copy $DEV_ENV/env/.wezterm.lua $HOME/.wezterm.lua
-copy $DEV_ENV/env/.claude-init.sh $HOME/.claude-init.sh
-copy $DEV_ENV/env/intelephense/licence.txt $HOME/intelephense/licence.txt
