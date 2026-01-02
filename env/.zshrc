@@ -11,6 +11,8 @@ ZSH_THEME="robbyrussell"
 # Aliases
 alias v="/usr/local/bin/nvim"
 alias vim="/usr/local/bin/nvim"
+alias npwd="openssl rand -base64 16"
+alias npwdc="openssl rand -base64 16 | pbcopy"
 
 # Inspired here: https://catalins.tech/zsh-plugins/
 plugins=(git)
