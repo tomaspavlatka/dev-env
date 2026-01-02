@@ -2,7 +2,6 @@
 return {
   -- https://github.com/nvim-telescope/telescope.nvim
   'nvim-telescope/telescope.nvim',
-  lazy = true,
   keys = {
     {
       '<leader>pf',
