@@ -11,6 +11,7 @@ ZSH_THEME="robbyrussell"
 
 # Aliases
 alias v="/opt/homebrew/bin/nvim"
+alias k="kubectl"
 alias vim="/opt/homebrew/bin/nvim"
 alias npwd="openssl rand -base64 16"
 alias npwdc="openssl rand -base64 16 | pbcopy"
@@ -31,3 +32,9 @@ export NVM_DIR="$HOME/.nvm"
 
 # opencode
 export PATH=/Users/tomas.pavlatka/.opencode/bin:$PATH
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/tomas.pavlatka/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/tomas.pavlatka/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/tomas.pavlatka/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/tomas.pavlatka/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
