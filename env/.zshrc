@@ -34,7 +34,7 @@ export NVM_DIR="$HOME/.nvm"
 export PATH=/Users/tomas.pavlatka/.opencode/bin:$PATH
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/tomas.pavlatka/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/tomas.pavlatka/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/Users/tomas.pavlatka/codebase/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/tomas.pavlatka/codebase/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/tomas.pavlatka/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/tomas.pavlatka/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/Users/tomas.pavlatka/codebase/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/tomas.pavlatka/codebase/google-cloud-sdk/completion.zsh.inc'; fi
