@@ -14,3 +14,14 @@ vim.keymap.set({ "n", "v" }, "<leader>Y", [["+Y]])
 vim.keymap.set("n", "Q", "<nop>")
 
 vim.keymap.set("i", "jk", "<Esc>")
+
+vim.keymap.set("n", "<leader>cfp", ":letj")
+
+-- Copy the relative file path tothe clipboard register
+vim.keymap.set("n", "<leader>cfp", function()
+    local path = vim.fn.expand("%:~:.")
+    vim.fn.setreg("+", path) 
+    vim.notify('Copied relative path: ' .. path)
+end, { desc = "Copy relative file path to clipboard" })
+
+
