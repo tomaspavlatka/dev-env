@@ -15,6 +15,7 @@ alias k="kubectl"
 alias vim="/opt/homebrew/bin/nvim"
 alias npwd="openssl rand -base64 16"
 alias npwdc="openssl rand -base64 16 | pbcopy"
+alias ttest="clear && yarn test"
 
 # Inspired here: https://catalins.tech/zsh-plugins/
 plugins=(git)
