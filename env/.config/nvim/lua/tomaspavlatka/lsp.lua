@@ -1,4 +1,5 @@
 vim.lsp.enable("ts_ls");
+vim.lsp.enable("pyright");
 
 vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, opts)
 vim.keymap.set("n", "<leader>gD", vim.lsp.buf.declaration, opts)
