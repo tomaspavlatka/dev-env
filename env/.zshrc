@@ -10,7 +10,7 @@ export PATH=/Users/tomas.pavlatka/.opencode/bin:$PATH
 
 # 3. Oh My Zsh Setup
 ZSH_THEME="robbyrussell" 
-plugins=(git)
+plugins=(git zsh-autosuggestions) 
 source $ZSH/oh-my-zsh.sh
 
 # 4. Tool Initializations (FZF, Zoxide, NVM)
