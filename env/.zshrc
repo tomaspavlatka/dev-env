@@ -10,7 +10,7 @@ export PATH=/Users/tomas.pavlatka/.opencode/bin:$PATH
 
 # 3. Oh My Zsh Setup
 ZSH_THEME="robbyrussell" 
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search kubectl)
 source $ZSH/oh-my-zsh.sh
 
 # 4. Tool Initializations (FZF, Zoxide, NVM)
@@ -38,7 +38,6 @@ fi
 
 # 6. Aliases
 alias v="/opt/homebrew/bin/nvim"
-alias k="kubectl"
 alias vim="/opt/homebrew/bin/nvim"
 alias npwd="openssl rand -base64 16"
 alias npwdc="openssl rand -base64 16 | pbcopy"
