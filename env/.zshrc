@@ -1,15 +1,42 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
+# 1. Powerlevel10k instant prompt (Must stay at the top)
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# 2. Exports & Path Configuration
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR="/opt/homebrew/bin/nvim"
-ZSH_THEME="robbyrussell"
+export PATH=/Users/tomas.pavlatka/.opencode/bin:$PATH
 
-# Aliases
+# 3. Oh My Zsh Setup
+ZSH_THEME="robbyrussell" 
+plugins=(git)
+source $ZSH/oh-my-zsh.sh
+
+# 4. Tool Initializations (FZF, Zoxide, NVM)
+# This enables fzf for Ctrl+R (History) and Ctrl+T (Files)
+source <(fzf --zsh)
+
+# Optional: Enhanced fzf history search appearance
+export FZF_CTRL_R_OPTS="--height 40% --layout=reverse --border --inline-info"
+
+# Zoxide (Smart cd)
+eval "$(zoxide init zsh)"
+
+# NVM (Node Version Manager)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# 5. External Tool Integrations (Google Cloud SDK)
+if [ -f '/Users/tomas.pavlatka/codebase/google-cloud-sdk/path.zsh.inc' ]; then 
+  source '/Users/tomas.pavlatka/codebase/google-cloud-sdk/path.zsh.inc'
+fi
+if [ -f '/Users/tomas.pavlatka/codebase/google-cloud-sdk/completion.zsh.inc' ]; then 
+  source '/Users/tomas.pavlatka/codebase/google-cloud-sdk/completion.zsh.inc'
+fi
+
+# 6. Aliases
 alias v="/opt/homebrew/bin/nvim"
 alias k="kubectl"
 alias vim="/opt/homebrew/bin/nvim"
@@ -17,25 +44,5 @@ alias npwd="openssl rand -base64 16"
 alias npwdc="openssl rand -base64 16 | pbcopy"
 alias ttest="clear && yarn test"
 
-# Inspired here: https://catalins.tech/zsh-plugins/
-plugins=(git)
-
-source $ZSH/oh-my-zsh.sh
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# 7. Theme Customization (Must stay at the bottom)
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-eval "$(zoxide init zsh)"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# opencode
-export PATH=/Users/tomas.pavlatka/.opencode/bin:$PATH
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/tomas.pavlatka/codebase/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/tomas.pavlatka/codebase/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/tomas.pavlatka/codebase/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/tomas.pavlatka/codebase/google-cloud-sdk/completion.zsh.inc'; fi
