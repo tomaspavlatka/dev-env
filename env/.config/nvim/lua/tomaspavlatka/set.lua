@@ -48,3 +48,14 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.expandtab = true
   end
 })
+
+vim.filetype.add({
+  extension = {
+    env = "sh", -- or "dotenv" if you have a specific plugin
+  },
+  filename = {
+    [".env"] = "sh",
+    [".env.local"] = "sh",
+    [".env.development"] = "sh",
+  },
+})
