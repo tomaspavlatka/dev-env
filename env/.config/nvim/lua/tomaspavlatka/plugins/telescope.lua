@@ -48,7 +48,10 @@ return {
         local search = vim.fn.input("Grep: ");
         require('telescope').extensions.live_grep_args.live_grep_args({
           default_text = '"' .. search .. '"',
-          use_regex = true
+          use_regex = true,
+          additional_args = function(opts) 
+            return { "--hidden", "--no-ignore" }
+          end
         })
       end,
       mode = { "n" },
@@ -59,7 +62,10 @@ return {
         local word = vim.fn.expand("<cword>") -- Get the word under the cursor
         require('telescope').extensions.live_grep_args.live_grep_args({
           default_text = '"' .. word .. '"', -- Use the word as the default search text
-          use_regex = true
+          use_regex = true,
+          additional_args = function(opts) 
+            return { "--hidden", "--no-ignore" }
+          end
         })
       end,
       mode = { "n" },
