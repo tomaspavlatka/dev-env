@@ -50,7 +50,7 @@ return {
           default_text = '"' .. search .. '"',
           use_regex = true,
           additional_args = function(opts) 
-            return { "--hidden", "--no-ignore" }
+            return { "--hidden" }
           end
         })
       end,
@@ -64,7 +64,7 @@ return {
           default_text = '"' .. word .. '"', -- Use the word as the default search text
           use_regex = true,
           additional_args = function(opts) 
-            return { "--hidden", "--no-ignore" }
+            return { "--hidden" }
           end
         })
       end,
