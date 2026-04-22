@@ -6,7 +6,11 @@ fi
 # 2. Exports & Path Configuration
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR="/opt/homebrew/bin/nvim"
+export XDG_CONFIG_HOME="$HOME/.config"
+export BUN_INSTALL="$HOME/.bun"
 export PATH=/Users/tomas.pavlatka/.opencode/bin:$PATH
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
 # 3. Oh My Zsh Setup
 ZSH_THEME="robbyrussell" 
@@ -42,6 +46,10 @@ alias vim="/opt/homebrew/bin/nvim"
 alias npwd="openssl rand -base64 16"
 alias npwdc="openssl rand -base64 16 | pbcopy"
 alias ttest="clear && yarn test"
+alias yarnf="yarn format"
+alias yarnl="yarn lint"
+alias gcaf="git commit -am \"formatting\""
+alias gcal="git commit -am \"linting\""
 
 setopt EXTENDED_HISTORY          # Write the history file in the ":start:elapsed;command" format.
 setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
@@ -53,6 +61,9 @@ setopt HIST_FIND_NO_DUPS         # Do not display a line previously found.
 setopt HIST_IGNORE_SPACE         # Don\'t record an entry starting with a space.
 setopt HIST_SAVE_NO_DUPS         # Don\'t write duplicate entries in the history file.
 setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
+
+# bun completions
+[ -s "/Users/tomas.pavlatka/.bun/_bun" ] && source "/Users/tomas.pavlatka/.bun/_bun"
 
 # 7. Theme Customization (Must stay at the bottom)
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
