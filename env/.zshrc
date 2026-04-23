@@ -48,6 +48,7 @@ alias npwdc="openssl rand -base64 16 | pbcopy"
 alias ttest="clear && yarn test"
 alias yarnf="yarn format"
 alias yarnl="yarn lint"
+alias yarnb="yarn build"
 alias gcaf="git commit -am \"formatting\""
 alias gcal="git commit -am \"linting\""
 
