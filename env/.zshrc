@@ -40,6 +40,16 @@ if [ -f '/Users/tomas.pavlatka/codebase/google-cloud-sdk/completion.zsh.inc' ]; 
   source '/Users/tomas.pavlatka/codebase/google-cloud-sdk/completion.zsh.inc'
 fi
 
+git_sync_main() {
+  # Check if the working directory is clean
+  if [[ -n $(git status --porcelain) ]]; then
+    echo "❌ Error: You have uncommitted changes. Stash or commit them first."
+  else
+    echo "Syncing with origin/main..."
+    git fetch origin main && git merge origin/main
+  fi
+}
+
 # 6. Aliases
 alias v="/opt/homebrew/bin/nvim"
 alias vim="/opt/homebrew/bin/nvim"
@@ -51,6 +61,9 @@ alias yarnl="yarn lint"
 alias yarnb="yarn build"
 alias gcaf="git commit -am \"formatting\""
 alias gcal="git commit -am \"linting\""
+alias gpsh="git push"
+alias gpl="git pull"
+alias gmm="git_sync_main"
 
 setopt EXTENDED_HISTORY          # Write the history file in the ":start:elapsed;command" format.
 setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
