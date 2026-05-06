@@ -64,6 +64,8 @@ alias gcal="git commit -am \"linting\""
 alias gpsh="git push"
 alias gpl="git pull"
 alias gmm="git_sync_main"
+alias kaim="kubectl -n iam-user-service"
+alias kaimpods="watch -n 5 \"kubectl -n iam-user-service get pods\""
 
 setopt EXTENDED_HISTORY          # Write the history file in the ":start:elapsed;command" format.
 setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
