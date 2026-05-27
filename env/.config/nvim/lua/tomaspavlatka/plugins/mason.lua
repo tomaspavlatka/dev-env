@@ -1,15 +1,13 @@
 return {
   "williamboman/mason.nvim",
   dependencies = {
-    "hrsh7th/cmp-nvim-lsp",
+    "saghen/blink.cmp",
   },
   config = function()
     require("mason").setup()
 
-    -- 1. Setup Capabilities (from cmp-nvim-lsp)
-    local capabilities = require("cmp_nvim_lsp").default_capabilities()
+    local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-    -- 2. Configure Pyright using the new 0.11 API
     vim.lsp.config("pyright", {
       cmd = { "pyright-langserver", "--stdio" },
       filetypes = { "python" },
