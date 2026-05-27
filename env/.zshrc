@@ -5,15 +5,13 @@ fi
 
 # 2. Exports & Path Configuration
 export ZSH="$HOME/.oh-my-zsh"
-export EDITOR="/opt/homebrew/bin/nvim"
+export EDITOR="nvim"
 export XDG_CONFIG_HOME="$HOME/.config"
 export BUN_INSTALL="$HOME/.bun"
-export PATH=/Users/tomas.pavlatka/.opencode/bin:$PATH
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # 3. Oh My Zsh Setup
-ZSH_THEME="robbyrussell" 
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search kubectl)
 source $ZSH/oh-my-zsh.sh
 
@@ -33,11 +31,11 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # 5. External Tool Integrations (Google Cloud SDK)
-if [ -f '/Users/tomas.pavlatka/codebase/google-cloud-sdk/path.zsh.inc' ]; then 
-  source '/Users/tomas.pavlatka/codebase/google-cloud-sdk/path.zsh.inc'
+if [ -f "$HOME/codebase/google-cloud-sdk/path.zsh.inc" ]; then
+  source "$HOME/codebase/google-cloud-sdk/path.zsh.inc"
 fi
-if [ -f '/Users/tomas.pavlatka/codebase/google-cloud-sdk/completion.zsh.inc' ]; then 
-  source '/Users/tomas.pavlatka/codebase/google-cloud-sdk/completion.zsh.inc'
+if [ -f "$HOME/codebase/google-cloud-sdk/completion.zsh.inc" ]; then
+  source "$HOME/codebase/google-cloud-sdk/completion.zsh.inc"
 fi
 
 git_sync_main() {
@@ -45,14 +43,15 @@ git_sync_main() {
   if [[ -n $(git status --porcelain) ]]; then
     echo "❌ Error: You have uncommitted changes. Stash or commit them first."
   else
-    echo "Syncing with origin/main..."
-    git fetch origin main && git merge origin/main
+    local default_branch=$(git remote show origin | grep 'HEAD branch' | awk '{print $NF}')
+    echo "Syncing with origin/$default_branch..."
+    git fetch origin "$default_branch" && git merge "origin/$default_branch"
   fi
 }
 
 # 6. Aliases
-alias v="/opt/homebrew/bin/nvim"
-alias vim="/opt/homebrew/bin/nvim"
+alias v="nvim"
+alias vim="nvim"
 alias npwd="openssl rand -base64 16"
 alias npwdc="openssl rand -base64 16 | pbcopy"
 alias yarnt="clear && yarn test"
@@ -79,7 +78,7 @@ setopt HIST_SAVE_NO_DUPS         # Don\'t write duplicate entries in the history
 setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
 
 # bun completions
-[ -s "/Users/tomas.pavlatka/.bun/_bun" ] && source "/Users/tomas.pavlatka/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # 7. Theme Customization (Must stay at the bottom)
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
