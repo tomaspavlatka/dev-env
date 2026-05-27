@@ -15,9 +15,7 @@ vim.keymap.set("n", "Q", "<nop>")
 
 vim.keymap.set("i", "jk", "<Esc>")
 
-vim.keymap.set("n", "<leader>cfp", ":letj")
-
--- Copy the relative file path tothe clipboard register
+-- Copy the relative file path to the clipboard register
 vim.keymap.set("n", "<leader>cfp", function()
     local path = vim.fn.expand("%:~:.")
     vim.fn.setreg("+", path) 
