@@ -36,9 +36,9 @@ return {
     {
       '<leader>ft',
       function()
-        local success, node = pcall(function() return require('nvim-tree.lib').get_node_at_cursor() end)
-        if not success or not node then return end;
-        require('telescope.builtin').live_grep({search_dirs = {node.absolute_path}})
+        local dir = require("oil").get_current_dir()
+        if not dir then return end
+        require('telescope.builtin').live_grep({search_dirs = {dir}})
       end,
       mode = { "n" }
     },
