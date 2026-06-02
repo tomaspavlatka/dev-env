@@ -12,6 +12,7 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # 3. Oh My Zsh Setup
+ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search kubectl)
 source $ZSH/oh-my-zsh.sh
 
