@@ -3,65 +3,93 @@
     {
       "complex_modifications": {
         "rules": [
-
           {
-            "description": "Caps Lock Hyper/Escape + HJKL Arrows + Hyper+B for tmux (Ctrl+B)",
+            "description": "Caps Lock Hyper/Escape (Global) + iTerm2 Vim/tmux Remaps",
             "manipulators": [
               {
                 "type": "basic",
                 "from": {
                   "key_code": "caps_lock",
-                  "modifiers": {
-                    "optional": ["any"]
-                  }
+                  "modifiers": { "optional": ["any"] }
                 },
                 "to": [
                   {
                     "key_code": "left_shift",
-                    "modifiers": [
-                      "left_command",
-                      "left_control",
-                      "left_option"
-                    ]
+                    "modifiers": ["left_command", "left_control", "left_option"]
                   }
                 ],
-                "to_if_alone": [
-                  {
-                    "key_code": "escape"
-                  }
-                ]
+                "to_if_alone": [{ "key_code": "escape" }]
               },
               {
                 "type": "basic",
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": ["^com\\.googlecode\\.iterm2$"]
+                  }
+                ],
                 "from": {
                   "key_code": "b",
                   "modifiers": {
-                    "mandatory": [
-                      "left_command",
-                      "left_control",
-                      "left_option",
-                      "left_shift"
-                    ]
+                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
                   }
                 },
-                "to": [
+                "to": [{ "key_code": "b", "modifiers": ["left_control"] }]
+              },
+              {
+                "type": "basic",
+                "conditions": [
                   {
-                    "key_code": "b",
-                    "modifiers": ["left_control"]
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": ["^com\\.googlecode\\.iterm2$"]
                   }
-                ]
+                ],
+                "from": {
+                  "key_code": "d",
+                  "modifiers": {
+                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
+                  }
+                },
+                "to": [{ "key_code": "d", "modifiers": ["left_control"] }]
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": ["^com\\.googlecode\\.iterm2$"]
+                  }
+                ],
+                "from": {
+                  "key_code": "u",
+                  "modifiers": {
+                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
+                  }
+                },
+                "to": [{ "key_code": "u", "modifiers": ["left_control"] }]
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": ["^com\\.googlecode\\.iterm2$"]
+                  }
+                ],
+                "from": {
+                  "key_code": "r",
+                  "modifiers": {
+                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
+                  }
+                },
+                "to": [{ "key_code": "r", "modifiers": ["left_control"] }]
               },
               {
                 "type": "basic",
                 "from": {
                   "key_code": "h",
                   "modifiers": {
-                    "mandatory": [
-                      "left_command",
-                      "left_control",
-                      "left_option",
-                      "left_shift"
-                    ]
+                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
                   }
                 },
                 "to": [{ "key_code": "left_arrow" }]
@@ -71,12 +99,7 @@
                 "from": {
                   "key_code": "j",
                   "modifiers": {
-                    "mandatory": [
-                      "left_command",
-                      "left_control",
-                      "left_option",
-                      "left_shift"
-                    ]
+                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
                   }
                 },
                 "to": [{ "key_code": "down_arrow" }]
@@ -86,12 +109,7 @@
                 "from": {
                   "key_code": "k",
                   "modifiers": {
-                    "mandatory": [
-                      "left_command",
-                      "left_control",
-                      "left_option",
-                      "left_shift"
-                    ]
+                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
                   }
                 },
                 "to": [{ "key_code": "up_arrow" }]
@@ -101,6 +119,21 @@
                 "from": {
                   "key_code": "l",
                   "modifiers": {
+                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
+                  }
+                },
+                "to": [{ "key_code": "right_arrow" }]
+              }
+            ]
+          },
+          {
+            "description": "hyper + o leader key app launcher (m = mail, s = slack)",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "o",
+                  "modifiers": {
                     "mandatory": [
                       "left_command",
                       "left_control",
@@ -109,7 +142,82 @@
                     ]
                   }
                 },
-                "to": [{ "key_code": "right_arrow" }]
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "app_launcher_mode",
+                      "value": 1
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "app_launcher_mode",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "m",
+                  "modifiers": { "optional": ["any"] }
+                },
+                "to": [
+                  { "shell_command": "open -a 'mail.app'" },
+                  {
+                    "set_variable": {
+                      "name": "app_launcher_mode",
+                      "value": 0
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "app_launcher_mode",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "s",
+                  "modifiers": { "optional": ["any"] }
+                },
+                "to": [
+                  { "shell_command": "open -a 'slack.app'" },
+                  {
+                    "set_variable": {
+                      "name": "app_launcher_mode",
+                      "value": 0
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "app_launcher_mode",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "escape",
+                  "modifiers": { "optional": ["any"] }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "app_launcher_mode",
+                      "value": 0
+                    }
+                  }
+                ]
               }
             ]
           }
@@ -135,7 +243,7 @@
           "swap_grave_accent_and_non_us_backslash": true
         }
       ],
-      "name": "Default profile",
+      "name": "default profile",
       "selected": true,
       "virtual_hid_keyboard": { "keyboard_type_v2": "iso" }
     }
