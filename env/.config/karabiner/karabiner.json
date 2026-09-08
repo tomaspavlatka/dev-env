@@ -127,7 +127,7 @@
             ]
           },
           {
-            "description": "hyper + o leader key app launcher (m = mail, s = slack)",
+            "description": "hyper + o leader key app launcher (m = mail, s = slack, b = browswer, t = iterm2)",
             "manipulators": [
               {
                 "type": "basic",
@@ -189,6 +189,52 @@
                 },
                 "to": [
                   { "shell_command": "open -a 'slack.app'" },
+                  {
+                    "set_variable": {
+                      "name": "app_launcher_mode",
+                      "value": 0
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "app_launcher_mode",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "b",
+                  "modifiers": { "optional": ["any"] }
+                },
+                "to": [
+                  { "shell_command": "open -a 'opera.app'" },
+                  {
+                    "set_variable": {
+                      "name": "app_launcher_mode",
+                      "value": 0
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "app_launcher_mode",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "t",
+                  "modifiers": { "optional": ["any"] }
+                },
+                "to": [
+                  { "shell_command": "open -a 'iterm.app'" },
                   {
                     "set_variable": {
                       "name": "app_launcher_mode",
