@@ -4,6 +4,11 @@ real_run="0"
 XDG_CONFIG_HOME=$HOME/.config
 DEV_ENV=$HOME/codebase/personal/dev-env
 
+# Config directories that also hold live state we don't track. These get an
+# overlay copy instead of rm+copy, so files the app writes itself survive.
+# karabiner: Karabiner-Elements owns automatic_backups/ and assets/.
+PRESERVE_DIRS="karabiner"
+
 if [[ $1 == "--real" ]]; then
     real_run="1"
 fi
@@ -16,6 +21,15 @@ log() {
     fi
 }
 
+is_preserved() {
+    for p in $PRESERVE_DIRS; do
+        if [[ $1 == $p ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
 log "env: $DEV_ENV"
 
 update_files() {
@@ -24,11 +38,17 @@ update_files() {
     (
         configs=`find . -mindepth 1 -maxdepth 1 -type d`
         for c in $configs; do
-            directory=${2%/}/${c#./}
-            log "    removing: rm -rf $directory"
+            name=${c#./}
+            directory=${2%/}/$name
 
-            if [[ $real_run == "1" ]]; then
-                rm -rf $directory
+            if is_preserved $name; then
+                log "    preserving live state, overlay only: $directory"
+            else
+                log "    removing: rm -rf $directory"
+
+                if [[ $real_run == "1" ]]; then
+                    rm -rf $directory
+                fi
             fi
 
             log "    copying env: cp $c $2"

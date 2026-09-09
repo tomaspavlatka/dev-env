@@ -24,6 +24,7 @@ There are no build, test, or lint commands.
 **Two scripts, two directories:**
 
 - `dev-env` — Copies files from `env/` to their live locations (`~/.config/`, `~/.zshrc`, etc.). Does rm+copy, not merge. Pass `--real` to apply. **Note:** the repo path is hardcoded as `$HOME/codebase/personal/dev-env`.
+  - Exception: directories listed in `PRESERVE_DIRS` are overlaid instead of rm+copy, because the app writes its own state there that isn't tracked in the repo. Currently `karabiner` (Karabiner-Elements owns `automatic_backups/` and `assets/`). Stale files in a preserved directory are *not* cleaned up — remove them by hand.
 - `dev-run` — Discovers and runs all executable `run/*.sh` scripts. Supports grep filtering. Pass `--real` to execute.
 
 **`env/`** — Source of truth for all dotfiles:

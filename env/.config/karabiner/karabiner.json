@@ -4,150 +4,37 @@
       "complex_modifications": {
         "rules": [
           {
-            "description": "Caps Lock Hyper/Escape (Global) + iTerm2 Vim/tmux Remaps",
+            "description": "Caps Lock: tap = Escape, hold = nav/app layer (hjkl = arrows, m/s/b/t = apps)",
             "manipulators": [
               {
                 "type": "basic",
                 "from": {
                   "key_code": "caps_lock",
-                  "modifiers": { "optional": ["any"] }
-                },
-                "to": [
-                  {
-                    "key_code": "left_shift",
-                    "modifiers": ["left_command", "left_control", "left_option"]
-                  }
-                ],
-                "to_if_alone": [{ "key_code": "escape" }]
-              },
-              {
-                "type": "basic",
-                "conditions": [
-                  {
-                    "type": "frontmost_application_if",
-                    "bundle_identifiers": ["^com\\.googlecode\\.iterm2$"]
-                  }
-                ],
-                "from": {
-                  "key_code": "b",
                   "modifiers": {
-                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
-                  }
-                },
-                "to": [{ "key_code": "b", "modifiers": ["left_control"] }]
-              },
-              {
-                "type": "basic",
-                "conditions": [
-                  {
-                    "type": "frontmost_application_if",
-                    "bundle_identifiers": ["^com\\.googlecode\\.iterm2$"]
-                  }
-                ],
-                "from": {
-                  "key_code": "d",
-                  "modifiers": {
-                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
-                  }
-                },
-                "to": [{ "key_code": "d", "modifiers": ["left_control"] }]
-              },
-              {
-                "type": "basic",
-                "conditions": [
-                  {
-                    "type": "frontmost_application_if",
-                    "bundle_identifiers": ["^com\\.googlecode\\.iterm2$"]
-                  }
-                ],
-                "from": {
-                  "key_code": "u",
-                  "modifiers": {
-                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
-                  }
-                },
-                "to": [{ "key_code": "u", "modifiers": ["left_control"] }]
-              },
-              {
-                "type": "basic",
-                "conditions": [
-                  {
-                    "type": "frontmost_application_if",
-                    "bundle_identifiers": ["^com\\.googlecode\\.iterm2$"]
-                  }
-                ],
-                "from": {
-                  "key_code": "r",
-                  "modifiers": {
-                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
-                  }
-                },
-                "to": [{ "key_code": "r", "modifiers": ["left_control"] }]
-              },
-              {
-                "type": "basic",
-                "from": {
-                  "key_code": "h",
-                  "modifiers": {
-                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
-                  }
-                },
-                "to": [{ "key_code": "left_arrow" }]
-              },
-              {
-                "type": "basic",
-                "from": {
-                  "key_code": "j",
-                  "modifiers": {
-                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
-                  }
-                },
-                "to": [{ "key_code": "down_arrow" }]
-              },
-              {
-                "type": "basic",
-                "from": {
-                  "key_code": "k",
-                  "modifiers": {
-                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
-                  }
-                },
-                "to": [{ "key_code": "up_arrow" }]
-              },
-              {
-                "type": "basic",
-                "from": {
-                  "key_code": "l",
-                  "modifiers": {
-                    "mandatory": ["left_command", "left_control", "left_option", "left_shift"]
-                  }
-                },
-                "to": [{ "key_code": "right_arrow" }]
-              }
-            ]
-          },
-          {
-            "description": "hyper + o leader key app launcher (m = mail, s = slack, b = browswer, t = iterm2)",
-            "manipulators": [
-              {
-                "type": "basic",
-                "from": {
-                  "key_code": "o",
-                  "modifiers": {
-                    "mandatory": [
-                      "left_command",
-                      "left_control",
-                      "left_option",
-                      "left_shift"
+                    "optional": [
+                      "any"
                     ]
                   }
                 },
                 "to": [
                   {
                     "set_variable": {
-                      "name": "app_launcher_mode",
+                      "name": "nav_layer",
                       "value": 1
                     }
+                  }
+                ],
+                "to_after_key_up": [
+                  {
+                    "set_variable": {
+                      "name": "nav_layer",
+                      "value": 0
+                    }
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "escape"
                   }
                 ]
               },
@@ -156,21 +43,113 @@
                 "conditions": [
                   {
                     "type": "variable_if",
-                    "name": "app_launcher_mode",
+                    "name": "nav_layer",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "h",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "left_arrow"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "nav_layer",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "j",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "down_arrow"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "nav_layer",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "k",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "up_arrow"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "nav_layer",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "l",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "right_arrow"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "nav_layer",
                     "value": 1
                   }
                 ],
                 "from": {
                   "key_code": "m",
-                  "modifiers": { "optional": ["any"] }
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
                 },
                 "to": [
-                  { "shell_command": "open -a 'mail.app'" },
                   {
-                    "set_variable": {
-                      "name": "app_launcher_mode",
-                      "value": 0
-                    }
+                    "shell_command": "open -a 'mail.app'"
                   }
                 ]
               },
@@ -179,21 +158,21 @@
                 "conditions": [
                   {
                     "type": "variable_if",
-                    "name": "app_launcher_mode",
+                    "name": "nav_layer",
                     "value": 1
                   }
                 ],
                 "from": {
                   "key_code": "s",
-                  "modifiers": { "optional": ["any"] }
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
                 },
                 "to": [
-                  { "shell_command": "open -a 'slack.app'" },
                   {
-                    "set_variable": {
-                      "name": "app_launcher_mode",
-                      "value": 0
-                    }
+                    "shell_command": "open -a 'slack.app'"
                   }
                 ]
               },
@@ -202,21 +181,21 @@
                 "conditions": [
                   {
                     "type": "variable_if",
-                    "name": "app_launcher_mode",
+                    "name": "nav_layer",
                     "value": 1
                   }
                 ],
                 "from": {
                   "key_code": "b",
-                  "modifiers": { "optional": ["any"] }
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
                 },
                 "to": [
-                  { "shell_command": "open -a 'opera.app'" },
                   {
-                    "set_variable": {
-                      "name": "app_launcher_mode",
-                      "value": 0
-                    }
+                    "shell_command": "open -a 'opera.app'"
                   }
                 ]
               },
@@ -225,45 +204,2153 @@
                 "conditions": [
                   {
                     "type": "variable_if",
-                    "name": "app_launcher_mode",
+                    "name": "nav_layer",
                     "value": 1
                   }
                 ],
                 "from": {
                   "key_code": "t",
-                  "modifiers": { "optional": ["any"] }
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
                 },
                 "to": [
-                  { "shell_command": "open -a 'iterm.app'" },
                   {
-                    "set_variable": {
-                      "name": "app_launcher_mode",
-                      "value": 0
-                    }
+                    "shell_command": "open -a 'iterm.app'"
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "description": "Typing streak detector (suppresses home row mods mid-burst)",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "b",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "b"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "c",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "c"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "e",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "e"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "g",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "g"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "h"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "i",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "i"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "m",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "m"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "n",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "n"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "o",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "o"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "p",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "p"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "q",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "q"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "r",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "r"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "t",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "t"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "u",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "u"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "v",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "v"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "w",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "w"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "x",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "x"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "y",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "y"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "z",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "z"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "1",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "1"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "2",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "2"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "3",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "3"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "4",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "4"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "5",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "5"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "6",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "6"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "7",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "7"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "8",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "8"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "9",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "9"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "0",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "0"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "spacebar",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "spacebar"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "delete_or_backspace",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "delete_or_backspace"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "comma",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "comma"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "period",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "period"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "slash",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "slash"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "hyphen",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "hyphen"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "equal_sign",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "equal_sign"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "quote",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "quote"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "open_bracket",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "open_bracket"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "close_bracket",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "close_bracket"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "backslash",
+                  "modifiers": {
+                    "optional": [
+                      "shift",
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "backslash"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              }
+            ]
+          },
+          {
+            "description": "Home Row Mods (a=Opt s=Shift d=Ctrl f=Cmd | j=Cmd k=Ctrl l=Shift ;=Opt)",
+            "manipulators": [
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hrm_typing",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "a",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "a"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "a",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to_if_held_down": [
+                  {
+                    "key_code": "left_option",
+                    "halt": true
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "a"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 200,
+                  "basic.to_if_alone_timeout_milliseconds": 250,
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
               },
               {
                 "type": "basic",
                 "conditions": [
                   {
                     "type": "variable_if",
-                    "name": "app_launcher_mode",
+                    "name": "hrm_typing",
                     "value": 1
                   }
                 ],
                 "from": {
-                  "key_code": "escape",
-                  "modifiers": { "optional": ["any"] }
+                  "key_code": "s",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
                 },
                 "to": [
                   {
                     "set_variable": {
-                      "name": "app_launcher_mode",
-                      "value": 0
+                      "name": "hrm_typing",
+                      "value": 1
                     }
+                  },
+                  {
+                    "key_code": "s"
                   }
-                ]
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "s",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to_if_held_down": [
+                  {
+                    "key_code": "left_shift",
+                    "halt": true
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "s"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 200,
+                  "basic.to_if_alone_timeout_milliseconds": 250,
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hrm_typing",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "d",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "d"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "d",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to_if_held_down": [
+                  {
+                    "key_code": "left_control",
+                    "halt": true
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "d"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 200,
+                  "basic.to_if_alone_timeout_milliseconds": 250,
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hrm_typing",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "f",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "f"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "f",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to_if_held_down": [
+                  {
+                    "key_code": "left_command",
+                    "halt": true
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "f"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 200,
+                  "basic.to_if_alone_timeout_milliseconds": 250,
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hrm_typing",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "j",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "j"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "j",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to_if_held_down": [
+                  {
+                    "key_code": "right_command",
+                    "halt": true
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "j"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 200,
+                  "basic.to_if_alone_timeout_milliseconds": 250,
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hrm_typing",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "k",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "k"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "k",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to_if_held_down": [
+                  {
+                    "key_code": "right_control",
+                    "halt": true
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "k"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 200,
+                  "basic.to_if_alone_timeout_milliseconds": 250,
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hrm_typing",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "l",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "l"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to_if_held_down": [
+                  {
+                    "key_code": "right_shift",
+                    "halt": true
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "l"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 200,
+                  "basic.to_if_alone_timeout_milliseconds": 250,
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hrm_typing",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "semicolon",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "semicolon"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "semicolon",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to_if_held_down": [
+                  {
+                    "key_code": "right_option",
+                    "halt": true
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "set_variable": {
+                      "name": "hrm_typing",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "key_code": "semicolon"
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_invoked": [
+                    {
+                      "set_variable": {
+                        "name": "hrm_typing",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 200,
+                  "basic.to_if_alone_timeout_milliseconds": 250,
+                  "basic.to_delayed_action_delay_milliseconds": 220
+                }
               }
             ]
           }
@@ -278,12 +2365,54 @@
           },
           "simple_modifications": [
             {
-              "from": { "key_code": "left_command" },
-              "to": [{ "key_code": "left_option" }]
+              "from": {
+                "key_code": "f10"
+              },
+              "to": [
+                {
+                  "consumer_key_code": "volume_decrement"
+                }
+              ]
             },
             {
-              "from": { "key_code": "left_option" },
-              "to": [{ "key_code": "left_command" }]
+              "from": {
+                "key_code": "f11"
+              },
+              "to": [
+                {
+                  "consumer_key_code": "volume_increment"
+                }
+              ]
+            },
+            {
+              "from": {
+                "key_code": "f12"
+              },
+              "to": [
+                {
+                  "consumer_key_code": "mute"
+                }
+              ]
+            },
+            {
+              "from": {
+                "key_code": "left_command"
+              },
+              "to": [
+                {
+                  "key_code": "left_option"
+                }
+              ]
+            },
+            {
+              "from": {
+                "key_code": "left_option"
+              },
+              "to": [
+                {
+                  "key_code": "left_command"
+                }
+              ]
             }
           ],
           "swap_grave_accent_and_non_us_backslash": true
@@ -291,7 +2420,9 @@
       ],
       "name": "default profile",
       "selected": true,
-      "virtual_hid_keyboard": { "keyboard_type_v2": "iso" }
+      "virtual_hid_keyboard": {
+        "keyboard_type_v2": "iso"
+      }
     }
   ]
 }
