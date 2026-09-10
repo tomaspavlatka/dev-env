@@ -4,7 +4,7 @@
       "complex_modifications": {
         "rules": [
           {
-            "description": "Caps Lock: tap = Escape, hold = Hyper | Hyper+hjkl = arrows, Hyper+b = tmux prefix, Hyper+a then o/s/m/t = apps (opera/slack/mail/iterm)",
+            "description": "Caps Lock: tap = Escape, hold = Hyper | Hyper+hjkl = arrows, Hyper+b = tmux prefix, Hyper+c = control+c, Hyper+a then o/s/m/t = apps (opera/slack/mail/iterm)",
             "manipulators": [
               {
                 "type": "basic",
@@ -207,6 +207,28 @@
                 "to": [
                   {
                     "key_code": "b",
+                    "modifiers": [
+                      "left_control"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "c",
+                  "modifiers": {
+                    "mandatory": [
+                      "left_command",
+                      "left_control",
+                      "left_option",
+                      "left_shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "c",
                     "modifiers": [
                       "left_control"
                     ]
