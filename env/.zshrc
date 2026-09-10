@@ -10,7 +10,6 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 export PATH="$BUN_INSTALL/bin:$PATH"
-export PATH="$PATH:$(go env GOPATH)/bin"
 
 # 3. Oh My Zsh Setup
 ZSH_THEME="powerlevel10k/powerlevel10k"
