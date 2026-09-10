@@ -1,0 +1,13 @@
+[user]
+  name = Tomas Pavlatka
+  email = tomas@pavlatka.cz
+[push]
+	autoSetupRemote = true
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[includeIf "gitdir:~/codebase/forto/"]
+    path = ~/.gitconfig-work
