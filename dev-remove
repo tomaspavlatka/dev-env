@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+
+# Removes a tool installed by dev-run: uninstalls the Homebrew formula/cask
+# (or npm global) AND deletes its run/*.sh so ./dev-run won't reinstall it.
+#
+#   ./dev-remove nushell                 # dry run, shows what would happen
+#   ./dev-remove nushell --real          # actually uninstall + delete the script
+#   ./dev-remove nushell --real --keep-script   # uninstall only, leave run/ alone
+
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
+
+pkg=""
+real_run="0"
+keep_script="0"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --real)        real_run="1" ;;
+        --keep-script) keep_script="1" ;;
+        -*)            echo "unknown flag: $1"; exit 1 ;;
+        *)             pkg="$1" ;;
+    esac
+    shift
+done
+
+if [[ -z $pkg ]]; then
+    echo "usage: ./dev-remove <package> [--real] [--keep-script]"
+    exit 1
+fi
+
+log() {
+    if [[ $real_run == "1" ]]; then
+        echo "$1"
+    else
+        echo "[DRY_RUN]: $1"
+    fi
+}
+
+run() {
+    log "    $*"
+    if [[ $real_run == "1" ]]; then
+        "$@"
+    fi
+}
+
+log "removing: $pkg"
+
+# --- uninstall -------------------------------------------------------------
+
+removed_something="0"
+
+if brew list --formula 2>/dev/null | grep -qx "$pkg"; then
+    log "  found Homebrew formula: $pkg"
+    run brew uninstall "$pkg"
+    removed_something="1"
+elif brew list --cask 2>/dev/null | grep -qx "$pkg"; then
+    log "  found Homebrew cask: $pkg"
+    run brew uninstall --cask "$pkg"
+    removed_something="1"
+elif npm ls -g --depth=0 --parseable 2>/dev/null | grep -q "/$pkg\$"; then
+    log "  found global npm package: $pkg"
+    run npm uninstall -g "$pkg"
+    removed_something="1"
+else
+    log "  not installed via brew or npm (nothing to uninstall)"
+fi
+
+# --- delete the install script so dev-run won't bring it back --------------
+
+# run/*.sh are named after the package they install, so the exact match
+# normally hits. The grep is a fallback for anything that drifts from that.
+scripts=""
+if [[ -f "$script_dir/run/$pkg.sh" ]]; then
+    scripts="$script_dir/run/$pkg.sh"
+else
+    scripts=$(grep -rl -- "$pkg" "$script_dir/run" 2>/dev/null)
+
+    # A loose name like "mongo" matches several scripts. Don't guess which one.
+    if [[ $(echo "$scripts" | grep -c .) -gt 1 ]]; then
+        echo "\"$pkg\" matches more than one script in run/:"
+        for s in $scripts; do
+            echo "    $(basename "$s")"
+        done
+        echo "be more specific, or pass --keep-script and delete it by hand."
+        exit 1
+    fi
+fi
+
+if [[ -z $scripts ]]; then
+    log "  no matching script in run/"
+elif [[ $keep_script == "1" ]]; then
+    for s in $scripts; do
+        log "  keeping (--keep-script): $s"
+    done
+else
+    for s in $scripts; do
+        log "  deleting install script: $s"
+        run rm "$s"
+        removed_something="1"
+    done
+fi
+
+# --- leftovers -------------------------------------------------------------
+
+leftovers=$(find "$script_dir/env" -maxdepth 3 -iname "*$pkg*" 2>/dev/null)
+if [[ -n $leftovers ]]; then
+    log "  NOTE: config still tracked in env/ (remove by hand if unwanted):"
+    for l in $leftovers; do
+        log "    $l"
+    done
+fi
+
+if [[ $removed_something == "1" && $real_run == "1" ]]; then
+    echo "done. run 'brew autoremove' to drop orphaned dependencies."
+fi

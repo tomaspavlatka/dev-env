@@ -15,17 +15,22 @@ Personal macOS developer environment configuration (dotfiles + tool installers).
 ./dev-run                      # Dry run: lists all install scripts
 ./dev-run --real               # Install/update all tools
 ./dev-run neovim --real        # Install/update only matching scripts
+
+./dev-remove nushell                       # Dry run: shows what would be removed
+./dev-remove nushell --real                # Uninstall + delete run/nushell.sh
+./dev-remove nushell --real --keep-script  # Uninstall only, leave run/ untouched
 ```
 
 There are no build, test, or lint commands.
 
 ## Architecture
 
-**Two scripts, two directories:**
+**Three scripts, two directories:**
 
 - `dev-env` — Copies files from `env/` to their live locations (`~/.config/`, `~/.zshrc`, etc.). Does rm+copy, not merge. Pass `--real` to apply. **Note:** the repo path is hardcoded as `$HOME/codebase/personal/dev-env`.
   - Exception: directories listed in `PRESERVE_DIRS` are overlaid instead of rm+copy, because the app writes its own state there that isn't tracked in the repo. Currently `karabiner` (Karabiner-Elements owns `automatic_backups/` and `assets/`). Stale files in a preserved directory are *not* cleaned up — remove them by hand.
 - `dev-run` — Discovers and runs all executable `run/*.sh` scripts. Supports grep filtering. Pass `--real` to execute.
+- `dev-remove` — Inverse of `dev-run` for a single tool: uninstalls the Homebrew formula/cask (or global npm package) and deletes the matching `run/*.sh`, so `dev-run` won't reinstall it. Resolves the script by exact `run/<name>.sh` first, then by grepping `run/` (refuses if that matches more than one). Warns about config still tracked in `env/` but never deletes it. Pass `--real` to apply.
 
 **`env/`** — Source of truth for all dotfiles:
 - `.zshrc` — Zsh config (Oh My Zsh + Powerlevel10k, fzf, zoxide, nvm)
@@ -50,7 +55,7 @@ Entry point: `env/.config/nvim/init.lua` → `lua/tomaspavlatka/init.lua`
 
 ## Conventions
 
-- Install scripts go in `run/` as standalone `.sh` files
+- Install scripts go in `run/` as standalone `.sh` files, named after the Homebrew package they install (`monitorcontrol.sh`, not `monitor-control.sh`) so `dev-remove <package>` finds them
 - All install scripts must be idempotent (check before install/upgrade)
 - Dotfiles are stored in `env/` mirroring their home directory path
 - Both `dev-env` and `dev-run` default to dry run for safety
