@@ -7,9 +7,6 @@ fi
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR="nvim"
 export XDG_CONFIG_HOME="$HOME/.config"
-export BUN_INSTALL="$HOME/.bun"
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
-export PATH="$BUN_INSTALL/bin:$PATH"
 
 # 3. Oh My Zsh Setup
 ZSH_THEME="powerlevel10k/powerlevel10k"
@@ -77,9 +74,6 @@ setopt HIST_FIND_NO_DUPS         # Do not display a line previously found.
 setopt HIST_IGNORE_SPACE         # Don\'t record an entry starting with a space.
 setopt HIST_SAVE_NO_DUPS         # Don\'t write duplicate entries in the history file.
 setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
-
-# bun completions
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # 7. Theme Customization (Must stay at the bottom)
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

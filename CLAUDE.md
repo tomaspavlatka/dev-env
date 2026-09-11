@@ -48,7 +48,7 @@ There are no build, test, or lint commands.
 
 Entry point: `env/.config/nvim/init.lua` → `lua/tomaspavlatka/init.lua`
 
-- `set.lua` — Vim options (relative numbers, 2-space tabs default, 4-space for Java/TypeScript, 120 col)
+- `set.lua` — Vim options (relative numbers, 2-space tabs default, 4-space for TypeScript, 120 col)
 - `remap.lua` — Key mappings (leader = Space)
 - `lsp.lua` — LSP keybinds using native `vim.lsp.enable()` (not nvim-lspconfig); servers: ts_ls, pyright
 - `plugins/` — One file per plugin (telescope, harpoon, oil, treesitter, mason, nvim-cmp, trouble, fugitive, cloak, colors, markdown-preview, octo)
