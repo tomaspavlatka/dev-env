@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# pass - CLI password manager; GPG-encrypted files in a git-backed store.
 if brew list --formula | grep -q "^pass$"; then
   echo "pass is already installed. Attempting to update..."
   brew upgrade pass

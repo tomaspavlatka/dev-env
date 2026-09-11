@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# ripgrep (rg) - very fast recursive grep; respects .gitignore. Used by telescope in nvim.
 if brew list --formula | grep -q "^ripgrep$"; then
   echo "ripgrep is already installed. Attempting to update..."
   brew upgrade ripgrep

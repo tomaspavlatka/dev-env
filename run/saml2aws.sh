@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# saml2aws - logs into AWS via SAML/SSO and writes temporary credentials to ~/.aws.
 if brew list --formula | grep -q "^saml2aws$"; then
   echo "saml2aws is already installed. Attempting to update..."
   brew upgrade saml2aws

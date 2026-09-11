@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# iTerm2 - macOS terminal emulator; replacement for Terminal.app.
 if brew list --cask | grep -q "^iterm2$"; then
   echo "iterm2 is already installed. Attempting to update..."
   brew upgrade --cask iterm2

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Hugo - static site generator; builds websites from Markdown.
 if brew list --formula | grep -q "^hugo$"; then
   echo "hugo is already installed. Attempting to update..."
   brew upgrade hugo

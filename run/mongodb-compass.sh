@@ -1,6 +1,7 @@
 #!/bin/sh
 
-if brew list --formula | grep -q "^mongodb-compass$"; then
+# MongoDB Compass - GUI for browsing and querying MongoDB databases.
+if brew list --cask | grep -q "^mongodb-compass$"; then
   echo "mongodb-compass is already installed. Attempting to update..."
   brew upgrade --cask mongodb-compass
 else

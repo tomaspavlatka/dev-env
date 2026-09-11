@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Zsh - the shell itself, via Homebrew so it stays newer than the macOS built-in.
 if brew list --formula | grep -q "^zsh$"; then
   echo "zsh is already installed. Attempting to update..."
   brew upgrade zsh
