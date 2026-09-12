@@ -19,18 +19,23 @@ Personal macOS developer environment configuration (dotfiles + tool installers).
 ./dev-remove nushell                       # Dry run: shows what would be removed
 ./dev-remove nushell --real                # Uninstall + delete run/nushell.sh
 ./dev-remove nushell --real --keep-script  # Uninstall only, leave run/ untouched
+
+./dev-detox                    # Dry run: lists what would be cleared
+./dev-detox --real             # Move Desktop/Downloads/Documents contents to Trash
+./dev-detox downloads --real   # Limit to one folder
 ```
 
 There are no build, test, or lint commands.
 
 ## Architecture
 
-**Three scripts, two directories:**
+**Four scripts, two directories:**
 
 - `dev-env` — Copies files from `env/` to their live locations (`~/.config/`, `~/.zshrc`, etc.). Does rm+copy, not merge. Pass `--real` to apply. **Note:** the repo path is hardcoded as `$HOME/codebase/personal/dev-env`.
   - Exception: directories listed in `PRESERVE_DIRS` are overlaid instead of rm+copy, because the app writes its own state there that isn't tracked in the repo. Currently `karabiner` (Karabiner-Elements owns `automatic_backups/` and `assets/`). Stale files in a preserved directory are *not* cleaned up — remove them by hand.
 - `dev-run` — Discovers and runs all executable `run/*.sh` scripts. Supports grep filtering. Pass `--real` to execute.
 - `dev-remove` — Inverse of `dev-run` for a single tool: uninstalls the Homebrew formula/cask (or global npm package) and deletes the matching `run/*.sh`, so `dev-run` won't reinstall it. Resolves the script by exact `run/<name>.sh` first, then by grepping `run/` (refuses if that matches more than one). Warns about config still tracked in `env/` but never deletes it. Pass `--real` to apply.
+- `dev-detox` — Weekly cleanup, unrelated to the other three. For each of `~/Desktop`, `~/Downloads` and `~/Documents` it collects the folder's contents into a dated staging folder (`desktop-<weekday>-YYYYMMDD/`, weekday from `LC_ALL=C date +%A`; `-2` suffix on same-day reruns) and trashes that one folder via Finder (`osascript` → `tell application "Finder" to delete`), so the Trash records the origin and Put Back restores the whole pile. Skips hidden files; honours the `KEEP=()` glob list at the top of the script. Pass `--real` to apply.
 
 **`env/`** — Source of truth for all dotfiles:
 - `.zshrc` — Zsh config (Oh My Zsh + Powerlevel10k, fzf, zoxide, nvm)

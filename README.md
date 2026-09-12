@@ -139,6 +139,46 @@ These are still manual — `dev-env` only deploys `env/.config/*` plus `.zshrc`,
 - **macOS privacy approvals** — Karabiner-Elements needs Input Monitoring and
   its driver extension approved; MonitorControl needs Accessibility.
 
+## Friday digital detox
+
+`./dev-detox` clears out `~/Desktop`, `~/Downloads` and `~/Documents`.
+
+```bash
+./dev-detox                   # dry run: lists every file it would remove
+./dev-detox --real            # move it all to the Trash
+./dev-detox downloads --real  # just one folder
+```
+
+Each folder is first collected into a dated staging folder, then that single
+folder is trashed:
+
+```
+Trash/
+  desktop-saturday-20260912/
+  downloads-saturday-20260912/
+  documents-saturday-20260912/
+```
+
+The weekday comes from `date`, so it reflects the day you actually ran it (and
+is always English, regardless of system locale).
+
+So the Trash tells you where every pile came from, and dragging one folder back
+out restores that whole day's worth of one location.
+
+It goes through Finder, so each folder keeps its **Put Back** entry and stays
+restorable until you empty the Trash. Nothing is `rm`'d. Set Finder → Settings →
+Advanced → *Remove items from the Trash after 30 days* if you want the space
+back automatically.
+
+- Hidden files (`.DS_Store`, `.localized`) are never touched.
+- To protect something permanently, add a glob to `KEEP=()` at the top of the
+  script, e.g. `KEEP=("taxes*" "*.kdbx")`.
+- Running twice on the same day is safe — the second staging folder gets a `-2`
+  suffix rather than colliding.
+- First `--real` run prompts for Automation access to Finder (System Settings →
+  Privacy & Security → Automation). Without it the script stops with an error
+  rather than deleting anything.
+
 ## Optional
 
 `.zshrc` picks these up if present, and silently skips them if not — none are
