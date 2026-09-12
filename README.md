@@ -6,6 +6,40 @@
 
 Inspired by https://github.com/bcampolo/nvim-starter-kit/tree/java
 
+## iTerm2 key settings
+
+These are GUI-only settings — nothing in this repo deploys them, and a fresh
+macOS install will not have them.
+
+### Option+Backspace (delete word)
+
+By default iTerm2 sets **Option Key Sends: Normal**, which means macOS eats
+Option as the compose/special-character modifier and the terminal never sees
+it. Option+Backspace then does nothing in Claude Code, Neovim's command line,
+or any readline-style prompt.
+
+Fix: **iTerm2 → Settings → Profiles → Keys → General → Left Option key: `Esc+`**
+(same for Right Option if you use it). Option+Backspace now sends `ESC DEL`,
+the word-delete sequence.
+
+Check the current value with:
+
+```bash
+defaults read com.googlecode.iterm2 "New Bookmarks" | grep -i "Option Key"
+# 0 = Normal (broken), 2 = Esc+ (what you want)
+```
+
+Do **not** fix this with `defaults write` while iTerm2 is running — it keeps
+prefs in memory and rewrites the plist on quit, clobbering the change.
+
+Fallbacks that work regardless: `Ctrl+W` deletes the word before the cursor,
+`Ctrl+U` clears the line.
+
+**Gotcha:** `env/.config/karabiner/karabiner.json` swaps `left_command` and
+`left_option` on the external keyboard (vendor 52468 / product 1779). On that
+keyboard the physical key in the **Cmd** position is the one emitting Option,
+so that's the one to press with Backspace.
+
 ## Prerequisites
 
 `dev-env` and `dev-run` assume a machine that is already bootstrapped. On a
