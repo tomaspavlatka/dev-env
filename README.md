@@ -40,6 +40,66 @@ Fallbacks that work regardless: `Ctrl+W` deletes the word before the cursor,
 keyboard the physical key in the **Cmd** position is the one emitting Option,
 so that's the one to press with Backspace.
 
+### Option+Left / Option+Right (move by word)
+
+Karabiner maps **Hyper+w / Hyper+e** (Caps Lock held) to `Option+Left` /
+`Option+Right` — W sits left of E, the same positional logic as `hjkl`. That is
+the correct macOS word-motion chord and works in every GUI app, but inside
+iTerm2 it moves only **one character** unless the profile has key mappings for
+the arrows.
+
+Reason: `Option Key Sends: Esc+` only prefixes `ESC` to whatever the key
+normally sends. Arrow keys already send escape sequences, so Option+Left
+becomes `ESC` `ESC [ D` — readline (zsh, Claude Code, Neovim's cmdline) drops
+the stray `ESC` and acts on the plain left-arrow. Word motion needs `ESC b`
+(and `ESC f` for forward), which is a *key mapping*, not a modifier setting.
+
+Fix: **iTerm2 → Settings → Profiles → Keys → Key Mappings → Presets… →
+Natural Text Editing**. That adds the arrow mappings (`⌥←` → `ESC b`, `⌥→` →
+`ESC f`, plus `⌘←/⌘→` for line start/end and `⌥⌫` for delete-word).
+
+Check whether the preset is applied:
+
+```bash
+defaults read com.googlecode.iterm2 "New Bookmarks" | grep -c "0xf702"
+# 0 = no key mappings (Hyper+w moves one char), >0 = preset applied
+```
+
+Same `defaults write` caveat as above — apply it in the GUI, not the plist.
+
+Fallbacks that work regardless: `Ctrl+B`/`Ctrl+F` move one char, `Alt+B`/`Alt+F`
+move one word (these are what `ESC b`/`ESC f` are).
+
+## Obsidian and the Hyper word motions
+
+Same symptom as the iTerm2 case above, different cause — worth knowing because
+it looks identical from the keyboard.
+
+The vault at `~/codebase/personal/ptx-obsidian-wiki` runs with
+`"vimMode": true` (`.obsidian/app.json`) plus the `obsidian-vimrc-support`
+plugin. Vim mode installs the CodeMirror vim keymap at highest precedence, and
+that keymap has no `<A-Left>`/`<A-Right>` entry — so in **normal and visual
+mode** the Option modifier is dropped and Hyper+w/e degrades to a plain
+`<Left>`/`<Right>`, one character at a time.
+
+**Insert mode is unaffected**: vim passes keys it does not handle down to
+CodeMirror's `standardKeymap`, which binds `Alt-ArrowLeft` → `cursorGroupLeft`.
+
+Fix lives in the vault's `.obsidian.vimrc` (that repo, not this one — `dev-env`
+does not deploy it):
+
+```vim
+nnoremap <A-Left> b
+nnoremap <A-Right> w
+vnoremap <A-Left> b
+vnoremap <A-Right> w
+```
+
+Reload with the **Vimrc Support: Reload vimrc** command, or `Cmd+R`.
+
+Native `b` / `w` / `e` still work in normal mode regardless — the mapping only
+matters if you want the one chord to behave the same everywhere.
+
 ## Prerequisites
 
 `dev-env` and `dev-run` assume a machine that is already bootstrapped. On a
