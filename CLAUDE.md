@@ -46,6 +46,7 @@ There are no build, test, or lint commands.
 - `intelephense/` — PHP LSP (Intelephense) license key directory
 
 **`run/`** — Individual Homebrew/npm install scripts. All follow the same idempotent pattern: check `brew list`, upgrade if present, install if not.
+  - Exception: `tfenv.sh` installs Terraform too, not just the named package. Terraform is no longer installable from Homebrew (dropped from homebrew-core after the BUSL relicense; `hashicorp/tap` fails to load under Homebrew 7), so the script installs `tfenv` via brew and then `tfenv install latest`. There is no `terraform.sh`.
 
 **Root-level standalone scripts** (`forto-cli.sh`) — Same install pattern but *not* managed by `dev-run` (they live outside `run/`).
 
