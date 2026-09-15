@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# GitHub CLI - talk to GitHub from the terminal (run `gh auth login` once after install).
 if brew list --formula | grep -q "^gh$"; then
   echo "gh is already installed. Attempting to update..."
   brew upgrade gh

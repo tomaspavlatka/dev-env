@@ -47,7 +47,7 @@ There are no build, test, or lint commands.
 
 **`run/`** — Individual Homebrew/npm install scripts. All follow the same idempotent pattern: check `brew list`, upgrade if present, install if not.
 
-**Root-level standalone scripts** (`forto-cli.sh`, `gh.sh`) — Same install pattern but *not* managed by `dev-run` (they live outside `run/`).
+**Root-level standalone scripts** (`forto-cli.sh`) — Same install pattern but *not* managed by `dev-run` (they live outside `run/`).
 
 ## Neovim Config Structure
 
