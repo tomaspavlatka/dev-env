@@ -74,6 +74,13 @@ copy() {
 
 update_files $DEV_ENV/env/.config $XDG_CONFIG_HOME
 
+# Claude Code skills. Scoped to ~/.claude/skills, not ~/.claude, so the rm+copy
+# in update_files never touches settings, auth or project state living alongside.
+if [[ $real_run == "1" ]]; then
+    mkdir -p $HOME/.claude/skills
+fi
+update_files $DEV_ENV/env/.claude/skills $HOME/.claude/skills
+
 # Get those config files into ~/
 copy $DEV_ENV/env/.zshrc $HOME/.zshrc
 copy $DEV_ENV/env/.p10k.zsh $HOME/.p10k.zsh

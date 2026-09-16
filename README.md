@@ -173,8 +173,8 @@ mkdir -p ~/.config
 
 ## After `./dev-env --real` and `./dev-run --real`
 
-These are still manual — `dev-env` only deploys `env/.config/*` plus `.zshrc`,
-`.p10k.zsh` and `.tmux.conf`.
+These are still manual — `dev-env` only deploys `env/.config/*` and
+`env/.claude/skills/*` plus `.zshrc`, `.p10k.zsh` and `.tmux.conf`.
 
 - **Git config** — copy it into place yourself:
   ```bash
