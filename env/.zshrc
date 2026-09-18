@@ -47,6 +47,28 @@ git_sync_main() {
   fi
 }
 
+# Exports FORTO_ARTIFACTS_TOKEN, the variable CI sets before `yarn config set
+# npmAuthToken`. Deliberately not run at startup: nothing local reads the variable
+# (a plain `yarn install` gets its own token via the gcp-auth yarn plugin), and the
+# token expires after about an hour - so fetch it on demand, and call this again
+# when it goes stale.
+forto_token() {
+  if ! command -v gcloud >/dev/null 2>&1; then
+    echo "❌ Error: gcloud is not installed. Run ./dev-run gcloud-cli --real."
+    return 1
+  fi
+
+  local token
+  token=$(gcloud auth print-access-token 2>/dev/null)
+  if [[ -z "$token" ]]; then
+    echo "❌ Error: no token from gcloud. Run 'gcloud auth login' first."
+    return 1
+  fi
+
+  export FORTO_ARTIFACTS_TOKEN="$token"
+  echo "✅ FORTO_ARTIFACTS_TOKEN set, good for about an hour."
+}
+
 # 6. Aliases
 alias v="nvim"
 alias vim="nvim"
