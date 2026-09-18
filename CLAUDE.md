@@ -49,6 +49,7 @@ There are no build, test, or lint commands.
 
 **`run/`** — Individual Homebrew/npm install scripts. All follow the same idempotent pattern: check `brew list`, upgrade if present, install if not.
   - Exception: `tfenv.sh` installs Terraform too, not just the named package. Terraform is no longer installable from Homebrew (dropped from homebrew-core after the BUSL relicense; `hashicorp/tap` fails to load under Homebrew 7), so the script installs `tfenv` via brew and then `tfenv install latest`. There is no `terraform.sh`.
+  - Exception: `nvm.sh` uses no Homebrew at all. nvm upstream refuses to support the brew formula, so the script pipes the official installer into bash, pinned to the newest GitHub release (with a hardcoded fallback tag when the API is unreachable). `PROFILE=/dev/null` keeps the installer out of the live `~/.zshrc` — the nvm hook is tracked in `env/.zshrc`. It `mkdir`s `~/.nvm` first, because `XDG_CONFIG_HOME` is set and the installer otherwise rejects a `$NVM_DIR` that isn't its own default (`~/.config/nvm`). It installs no node version; `nvm install --lts` is a manual step. `dev-remove nvm` deletes the script but cannot uninstall nvm — remove `~/.nvm` by hand. Note Homebrew's `node` is still present as a `mongosh` dependency; that is what nvm calls `system`.
 
 **Root-level standalone scripts** (`forto-cli.sh`) — Same install pattern but *not* managed by `dev-run` (they live outside `run/`).
 
