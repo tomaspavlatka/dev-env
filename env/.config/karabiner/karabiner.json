@@ -4,7 +4,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Caps Lock: tap = Escape, hold = hyper layer (Karabiner variable, no modifiers sent to apps) | Hyper+hjkl = arrows, Hyper+w/e = word left/right, Hyper+b = tmux prefix, Hyper+c = control+c, Hyper+o/i = control+o/control+i (nvim jumplist back/forward), Hyper+d/u = control+d/control+u (page down/up), Hyper+a then o/s/m/t = apps (opera/slack/mail/iterm)",
+                        "description": "Caps Lock: tap = Escape, hold = hyper layer (Karabiner variable, no modifiers sent to apps) | Hyper+hjkl = arrows, Hyper+e = word right, Hyper+w = control+w (nvim window prefix), Hyper+q = control+q (nvim quickfix), Hyper+b = tmux prefix, Hyper+c = control+c, Hyper+o/i = control+o/control+i (nvim jumplist back/forward), Hyper+d/u = control+d/control+u (page down/up), Hyper+a then o/s/m/t = apps (opera/slack/mail/iterm)",
                         "manipulators": [
                             {
                                 "from": { "key_code": "caps_lock", "modifiers": { "optional": ["any"] } },
@@ -123,7 +123,13 @@
                             {
                                 "conditions": [{ "name": "hyper", "type": "variable_if", "value": 1 }],
                                 "from": { "key_code": "w", "modifiers": { "optional": ["any"] } },
-                                "to": [{ "key_code": "left_arrow", "modifiers": ["left_option"] }],
+                                "to": [{ "key_code": "w", "modifiers": ["left_control"] }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [{ "name": "hyper", "type": "variable_if", "value": 1 }],
+                                "from": { "key_code": "q", "modifiers": { "optional": ["any"] } },
+                                "to": [{ "key_code": "q", "modifiers": ["left_control"] }],
                                 "type": "basic"
                             },
                             {
