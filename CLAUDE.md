@@ -23,13 +23,19 @@ Personal macOS developer environment configuration (dotfiles + tool installers).
 ./dev-detox                    # Dry run: lists what would be cleared
 ./dev-detox --real             # Move Desktop/Downloads/Documents contents to Trash
 ./dev-detox downloads --real   # Limit to one folder
+
+./dev-remember                 # Dry run: lists the days it would collect
+./dev-remember --real          # Write "memories - all.md" into the vault
+./dev-remember 2026 --real     # One year
+./dev-remember 2026-09 --real  # One month
+./dev-remember --from 2025-06-01 --to 2025-06-30 --real
 ```
 
 There are no build, test, or lint commands.
 
 ## Architecture
 
-**Four scripts, two directories:**
+**Five scripts, two directories:**
 
 - `dev-env` — Copies files from `env/` to their live locations (`~/.config/`, `~/.zshrc`, etc.). Does rm+copy, not merge. Pass `--real` to apply. **Note:** the repo path is hardcoded as `$HOME/codebase/personal/dev-env`.
   - Exception: directories listed in `PRESERVE_DIRS` are overlaid instead of rm+copy, because the app writes its own state there that isn't tracked in the repo. Currently `karabiner` (Karabiner-Elements owns `automatic_backups/` and `assets/`). Stale files in a preserved directory are *not* cleaned up — remove them by hand.
@@ -37,6 +43,11 @@ There are no build, test, or lint commands.
 - `dev-run` — Discovers and runs all executable `run/*.sh` scripts. Supports grep filtering. Pass `--real` to execute.
 - `dev-remove` — Inverse of `dev-run` for a single tool: uninstalls the Homebrew formula/cask (or global npm package) and deletes the matching `run/*.sh`, so `dev-run` won't reinstall it. Resolves the script by exact `run/<name>.sh` first, then by grepping `run/` (refuses if that matches more than one). Warns about config still tracked in `env/` but never deletes it. Pass `--real` to apply.
 - `dev-detox` — Weekly cleanup, unrelated to the other three. For each of `~/Desktop`, `~/Downloads` and `~/Documents` it collects the folder's contents into a dated staging folder (`desktop-<weekday>-YYYYMMDD/`, weekday from `LC_ALL=C date +%A`; `-2` suffix on same-day reruns) and trashes that one folder via Finder (`osascript` → `tell application "Finder" to delete`), so the Trash records the origin and Put Back restores the whole pile. Skips hidden files; honours the `KEEP=()` glob list at the top of the script. Pass `--real` to apply.
+- `dev-remember` — Also unrelated to the env scripts. Collects the "remember" sections out of the Obsidian journal (`~/codebase/personal/ptx-obsidian-wiki`, path hardcoded like `dev-env`'s) into one chronological page under `3 - areas/3.12 - memories/`, which you then export to PDF from Obsidian. Range defaults to everything; takes a year (`2026`), a month (`2026-09`), or `--from`/`--to`. Never overwrites — a second run writes `memories - 2026 (2).md`. Daily notes are only ever read. Pass `--real` to apply.
+  - It matches **three** headings, because the journal's format changed: `## :LiBookOpenCheck: Today I will remember` (current, and it carries a trailing space), plus the June 2025 pair `#### :LiWorkflow: I will remember today because of ....` and `#### :LiNotebookPen: Journal`. A single day can have both legacy sections; they are merged under one date, so in the awk a heading must be tested as an *opener* before it is tested as a terminator, or the second section is swallowed.
+  - Most of those headings are empty — the template emits them whether or not anything was written — so a bare run currently yields 21 days out of 315 notes, not 315. The dry run prints that skip count on purpose; without it the output looks broken.
+  - `20250624-Tuesday ex.md` is excluded by the strict `^[0-9]{8}-[A-Za-z]+\.md$` filename match. It duplicates a real date, so without the filter that day would get two headings.
+  - Image embeds are deliberately **not** rewritten. The page lives in the vault, so `![[name.webp]]` resolves on its own. Count occurrences, not lines — 2025-06-21 puts three embeds on one line.
 
 **`env/`** — Source of truth for all dotfiles:
 - `.zshrc` — Zsh config (Oh My Zsh + Powerlevel10k, fzf, zoxide, nvm)
@@ -68,4 +79,4 @@ Entry point: `env/.config/nvim/init.lua` → `lua/tomaspavlatka/init.lua`
 - Install scripts go in `run/` as standalone `.sh` files, named after the Homebrew package they install (`monitorcontrol.sh`, not `monitor-control.sh`) so `dev-remove <package>` finds them
 - All install scripts must be idempotent (check before install/upgrade)
 - Dotfiles are stored in `env/` mirroring their home directory path
-- Both `dev-env` and `dev-run` default to dry run for safety
+- All five scripts default to dry run; `--real` applies

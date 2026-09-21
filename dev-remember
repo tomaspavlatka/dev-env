@@ -1,0 +1,262 @@
+#!/usr/bin/env bash
+
+# Collects the memories out of the Obsidian journal into one printable page.
+#
+# Walks the daily notes, pulls out every "remember" section, and writes them
+# into a single chronological page in the vault -- one dated heading per day,
+# oldest first, photos and wikilinks intact. Open that page in Obsidian and
+# use Export to PDF to print it.
+#
+#   ./dev-remember                                    # dry run, everything
+#   ./dev-remember --real                             # write "memories - all.md"
+#   ./dev-remember 2026 --real                        # one year
+#   ./dev-remember 2026-09 --real                     # one month
+#   ./dev-remember --from 2025-06-01 --to 2025-06-30 --real
+#
+# Most daily notes have no memory in them -- the template leaves the heading
+# behind whether or not you wrote anything, so empty days are skipped and only
+# counted. An existing page is never overwritten: a second run writes
+# "memories - 2026 (2).md" beside it. The daily notes are never modified.
+
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
+
+VAULT="$HOME/codebase/personal/ptx-obsidian-wiki"
+DAILY_DIR="$VAULT/5 - notes/5.1 - daily-notes"
+OUT_DIR="$VAULT/3 - areas/3.12 - memories"
+
+# The three headings a memory has lived under. The June 2025 template split the
+# day between a bullet list and a prose journal; both count, and a day that has
+# both gets them merged under one date.
+HEADINGS='^(## :LiBookOpenCheck: Today I will remember|#### :LiWorkflow: I will remember today because of|#### :LiNotebookPen: Journal)'
+
+# Order matters: a heading is tested as an opener BEFORE it is tested as a
+# terminator, so "Journal" directly after a "Workflow" section opens the second
+# section instead of just closing the first.
+read -r -d '' EXTRACT <<'AWK'
+{ sub(/\r$/, "") }
+/^## :LiBookOpenCheck: Today I will remember[[:space:]]*$/ ||
+/^#### :LiWorkflow: I will remember today because of/ ||
+/^#### :LiNotebookPen: Journal/   { grab = 1; blanks = (n > 0 ? 1 : 0); next }
+grab && /^#+[ \t]/                { grab = 0 }
+grab {
+    if ($0 ~ /^-{3,}[[:space:]]*$/ && n == last) next          # rule line under the heading
+    if ($0 ~ /^[[:space:]]*$/) { if (n > 0) blanks++; next }   # defer blanks, never lead
+    while (blanks-- > 0) buf[n++] = ""
+    blanks = 0
+    buf[n++] = $0
+    last = n
+}
+END { for (i = 0; i < n; i++) print buf[i] }
+AWK
+
+real_run="0"
+period=""
+from_date=""
+to_date=""
+
+re_day='^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$'
+re_period='^[0-9]{4}(-(0[1-9]|1[0-2]))?$'
+
+# BSD date happily normalises nonsense -- 2026-02-30 becomes 2 March. Round-trip
+# it to catch that. Noon, because filling H:M:S from "now" can land on a wall
+# clock time that does not exist on a DST transition day and roll the date.
+to_stamp() {
+    local d="$1" s
+    [[ $d =~ $re_day ]] || return 1
+    s="${d//-/}"
+    [[ "$(LC_ALL=C date -j -f '%Y%m%d %H%M%S' "$s 120000" '+%Y%m%d' 2>/dev/null)" == "$s" ]] || return 1
+    printf '%s' "$s"
+}
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --real) real_run="1" ;;
+        -h|--help)
+            # keep in sync with the header block above
+            sed -n '3,19p' "$script_dir/dev-remember" | sed 's/^# \{0,1\}//'
+            exit 0 ;;
+        --from)
+            if ! from_date="$(to_stamp "${2:-}")"; then
+                echo "--from wants a real date like 2025-06-01, got: ${2:-nothing}"; exit 1
+            fi
+            from_label="$2"; shift ;;
+        --to)
+            if ! to_date="$(to_stamp "${2:-}")"; then
+                echo "--to wants a real date like 2026-09-30, got: ${2:-nothing}"; exit 1
+            fi
+            to_label="$2"; shift ;;
+        -*) echo "unknown flag: $1"; exit 1 ;;
+        *)
+            if [[ -n "$period" ]]; then
+                echo "only one period at a time (got \"$period\" and \"$1\")"; exit 1
+            fi
+            if [[ ! $1 =~ $re_period ]]; then
+                echo "expected a year (2026) or a month (2026-09), got: $1"; exit 1
+            fi
+            period="$1" ;;
+    esac
+    shift
+done
+
+if [[ -n "$period" && ( -n "$from_date" || -n "$to_date" ) ]]; then
+    echo "\"$period\" and --from/--to are two ways of saying the same thing -- pick one."
+    exit 1
+fi
+
+# The YYYYMMDD filename prefix compares correctly as a string, so the whole
+# range filter is string comparison -- no date(1) calls inside the loop. Period
+# bounds use synthetic 00/99 day parts, which sidesteps month-length arithmetic
+# and can never be wrong, since real stamps only ever run 01-31.
+from_key="00000000"
+to_key="99999999"
+label="all"
+
+if [[ -n "$period" ]]; then
+    if [[ ${#period} -eq 4 ]]; then
+        from_key="${period}0000"
+        to_key="${period}9999"
+    else
+        from_key="${period//-/}00"
+        to_key="${period//-/}99"
+    fi
+    label="$period"
+else
+    [[ -n "$from_date" ]] && from_key="$from_date"
+    [[ -n "$to_date" ]] && to_key="$to_date"
+    if [[ -n "$from_date" && -n "$to_date" ]]; then
+        label="$from_label to $to_label"
+    elif [[ -n "$from_date" ]]; then
+        label="from $from_label"
+    elif [[ -n "$to_date" ]]; then
+        label="until $to_label"
+    fi
+fi
+
+if [[ "$from_key" > "$to_key" ]]; then
+    echo "empty range: $label starts after it ends"
+    exit 1
+fi
+
+log() {
+    if [[ $real_run == "1" ]]; then
+        echo "$1"
+    else
+        echo "[DRY_RUN]: $1"
+    fi
+}
+
+for d in "$DAILY_DIR" "$OUT_DIR"; do
+    if [[ ! -d "$d" ]]; then
+        echo "no such folder: $d"
+        exit 1
+    fi
+done
+
+# LC_ALL=C so the weekday and month stay English regardless of system locale.
+pretty_date() {
+    LC_ALL=C date -j -f "%Y%m%d %H%M%S" "$1 120000" "+%A, %-d %B %Y"
+}
+
+# Never overwrite. " (2)" rather than "-2", which would read like a month.
+target="$OUT_DIR/memories - $label.md"
+n=2
+while [[ -e "$target" ]]; do
+    target="$OUT_DIR/memories - $label ($n).md"
+    n=$((n + 1))
+done
+
+notes=()
+for note in "$DAILY_DIR"/*.md; do
+    name="$(basename "$note")"
+    # Strict match drops "20250624-Tuesday ex.md", a duplicate of a real date
+    # that would otherwise emit a second heading for the same day.
+    [[ $name =~ ^[0-9]{8}-[A-Za-z]+\.md$ ]] && notes+=("$note")
+done
+
+log "MEMORIES: $label"
+log "  source: ${DAILY_DIR#$VAULT/} (${#notes[@]} notes)"
+log "  target: ${target#$VAULT/}"
+
+body_file="$(mktemp -t dev-remember)"
+page="$(mktemp -t dev-remember-page)"
+trap 'rm -f "$body_file" "$page"' EXIT
+
+days=0
+images=0
+blank=0
+first_key=""
+last_key=""
+
+for note in "${notes[@]}"; do
+    key="$(basename "$note")"
+    key="${key:0:8}"
+
+    [[ "$key" < "$from_key" ]] && continue
+    [[ "$key" > "$to_key" ]] && continue
+
+    body="$(awk "$EXTRACT" "$note")"
+    if [[ -z "$body" ]]; then
+        # A heading with nothing under it is worth counting; a note that never
+        # had a memory section at all is not worth a word.
+        grep -qE "$HEADINGS" "$note" && blank=$((blank + 1))
+        continue
+    fi
+
+    lines="$(printf '%s\n' "$body" | grep -c .)"
+    # grep -o, not grep -c: 2025-06-11 puts two embeds on a single line.
+    imgs="$(printf '%s\n' "$body" | grep -o '!\[\[' | wc -l | tr -d ' ')"
+
+    days=$((days + 1))
+    images=$((images + imgs))
+    [[ -z "$first_key" ]] && first_key="$key"
+    last_key="$key"
+
+    heading="$(pretty_date "$key")"
+    if [[ $imgs -gt 0 ]]; then
+        log "$(printf '  %-32s %2s line(s), %s image(s)' "$heading" "$lines" "$imgs")"
+    else
+        log "$(printf '  %-32s %2s line(s)' "$heading" "$lines")"
+    fi
+
+    {
+        printf '## %s\n\n' "$heading"
+        printf '%s\n\n' "$body"
+    } >> "$body_file"
+done
+
+[[ $blank -gt 0 ]] && log "  skipped $blank day(s) -- heading there, nothing written under it"
+
+if [[ $days -eq 0 ]]; then
+    log "DONE: nothing to remember in $label"
+    echo "Nothing written."
+    exit 0
+fi
+
+{
+    printf -- '---\ntags:\n  - memories\n---\n\n'
+    printf '# Memories - %s\n\n' "$label"
+    printf '*%s day(s), %s image(s), %s - %s.*\n\n' \
+        "$days" "$images" "$(pretty_date "$first_key")" "$(pretty_date "$last_key")"
+    cat "$body_file"
+} > "$page"
+
+log "DONE: $days day(s), $images image(s) -> ${target#$VAULT/}"
+
+if [[ $real_run != "1" ]]; then
+    echo "Nothing was touched. Re-run with --real to do it."
+    exit 0
+fi
+
+# Obsidian and Syncthing are both live in this vault -- re-check rather than
+# clobber something that appeared while we were reading.
+if [[ -e "$target" ]]; then
+    echo "  !! $(basename "$target") appeared while we were working -- not overwriting"
+    exit 1
+fi
+
+if ! mv "$page" "$target"; then
+    echo "  !! could not write $target"
+    exit 1
+fi
+
+echo "Open it in Obsidian and use Export to PDF to print it."

@@ -135,7 +135,8 @@ ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_forto
 mkdir -p ~/codebase/personal
 git clone git@github.com:tomaspavlatka/dev-env.git ~/codebase/personal/dev-env
 chmod +x ~/codebase/personal/dev-env/dev-env ~/codebase/personal/dev-env/dev-run \
-         ~/codebase/personal/dev-env/dev-remove ~/codebase/personal/dev-env/run/*.sh
+         ~/codebase/personal/dev-env/dev-remove ~/codebase/personal/dev-env/dev-detox \
+         ~/codebase/personal/dev-env/dev-remember ~/codebase/personal/dev-env/run/*.sh
 ```
 
 `dev-run` only picks up scripts with the executable bit (`find -perm +111`).
@@ -238,6 +239,47 @@ back automatically.
 - First `--real` run prompts for Automation access to Finder (System Settings →
   Privacy & Security → Automation). Without it the script stops with an error
   rather than deleting anything.
+
+## Journal memories
+
+`./dev-remember` collects the "remember" sections out of the Obsidian journal into one
+chronological page you can print.
+
+```bash
+./dev-remember                 # dry run: lists the days it would collect
+./dev-remember --real          # write "memories - all.md"
+./dev-remember 2026 --real     # one year
+./dev-remember 2026-09 --real  # one month
+./dev-remember --from 2025-06-01 --to 2025-06-30 --real
+```
+
+The page lands in `3 - areas/3.12 - memories/` in the vault, one `## Monday, 5 January 2026`
+heading per day, oldest first. To print it: open it in Obsidian and use **Export to PDF**
+(`.obsidian/app.json` already pins Letter, zero margin, filename included). There is no pandoc
+or LaTeX involved — Obsidian does the conversion.
+
+```
+3 - areas/3.12 - memories/
+  memories - all.md
+  memories - 2026.md
+  memories - 2025-06-01 to 2025-06-30.md
+```
+
+- **Most days are skipped, and that is correct.** The daily template writes the heading whether
+  or not you put anything under it, so of 315 notes only 21 currently hold a memory. The dry run
+  prints the skip count so the small number does not look like a bug.
+- **Three headings are recognised**, because the journal's format changed. The current
+  `## :LiBookOpenCheck: Today I will remember`, plus the June 2025 pair
+  `#### :LiWorkflow: I will remember today because of ....` and `#### :LiNotebookPen: Journal`.
+  Days that have both legacy sections get them merged under one date, bullets first.
+- **Nothing is ever overwritten.** A second run for the same range writes
+  `memories - 2026 (2).md` beside the first.
+- **Daily notes are only ever read.** The script does not commit either — obsidian-git does that
+  on its own.
+- **Photos come through as Obsidian embeds**, not copies. That means the page renders correctly
+  inside the vault and nowhere else; the raw `.md` is not portable on its own. Export the PDF if
+  you want something you can send.
+- Future-dated notes are included if they have content. `--to $(date +%F)` excludes them.
 
 ## Optional
 
