@@ -22,4 +22,21 @@ vim.keymap.set("n", "<leader>cfp", function()
     vim.notify('Copied relative path: ' .. path)
 end, { desc = "Copy relative file path to clipboard" })
 
+-- Drop *.spec.ts entries from the current quickfix list
+local function qf_entry_name(item)
+    if item.bufnr and item.bufnr > 0 and vim.api.nvim_buf_is_valid(item.bufnr) then
+        return vim.api.nvim_buf_get_name(item.bufnr)
+    end
+    return item.filename or ""
+end
 
+vim.api.nvim_create_user_command("QFRemoveSpecs", function()
+    local qf = vim.fn.getqflist({ items = 0, title = 0 })
+    local kept = vim.tbl_filter(function(item)
+        return not qf_entry_name(item):match("%.spec%.ts$")
+    end, qf.items)
+
+    local removed = #qf.items - #kept
+    vim.fn.setqflist({}, "r", { items = kept, title = qf.title })
+    vim.notify(("Removed %d spec entr%s"):format(removed, removed == 1 and "y" or "ies"))
+end, { desc = "Drop .spec.ts entries from the quickfix list" })
