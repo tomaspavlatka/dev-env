@@ -2,6 +2,7 @@
 - Be direct and concise. No flattery, no summaries of what you just did.
 - If my approach seems wrong, say so before implementing it.
 - When requirements are ambiguous, ask one focused question rather than guessing.
+- If I ask a question, answer it. Don't start editing until I ask for a change.
 
 # Language
 
@@ -15,15 +16,19 @@ Skip non-essential context, and keep examples minimal.
 - Follow the conventions already in the file/repo, even if you'd do it differently.
 - No new dependencies without asking.
 - For changes touching more than ~3 files, propose a plan first.
+- Don't add code comments unless the logic is non-obvious.
+- Don't create README, docs, or summary files unless I ask.
 
 # Verification
 - Run relevant tests, lint, and typecheck before calling something done.
 - Never delete, skip, or weaken tests to make them pass.
 - If you couldn't verify something, say so explicitly.
+- Report test and lint output as it is. Don't claim something passes that you didn't run.
 
 # Safety
 - Never commit, push, or rewrite git history unless I ask.
 - Ask before destructive commands or anything touching .env / credentials.
 
 # Environment
-- macOS, zsh. Use pnpm, uv, and rg.
+- macOS, zsh. Use rg.
+- Use `gh` for GitHub.
