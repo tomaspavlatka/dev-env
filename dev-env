@@ -64,7 +64,7 @@ update_files() {
 copy() {
     log "removing: $2"
     if [[ $real_run == "1" ]]; then
-        rm $2
+        rm -f $2
     fi
     log "copying: $1 to $2"
     if [[ $real_run == "1" ]]; then
@@ -80,6 +80,9 @@ if [[ $real_run == "1" ]]; then
     mkdir -p $HOME/.claude/skills
 fi
 update_files $DEV_ENV/env/.claude/skills $HOME/.claude/skills
+
+# User-level memory, merged with each project's own CLAUDE.md by Claude Code.
+copy $DEV_ENV/env/.claude/CLAUDE.md $HOME/.claude/CLAUDE.md
 
 # Get those config files into ~/
 copy $DEV_ENV/env/.zshrc $HOME/.zshrc

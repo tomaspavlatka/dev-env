@@ -40,6 +40,7 @@ There are no build, test, or lint commands.
 - `dev-env` — Copies files from `env/` to their live locations (`~/.config/`, `~/.zshrc`, etc.). Does rm+copy, not merge. Pass `--real` to apply. **Note:** the repo path is hardcoded as `$HOME/codebase/personal/dev-env`.
   - Exception: directories listed in `PRESERVE_DIRS` are overlaid instead of rm+copy, because the app writes its own state there that isn't tracked in the repo. Currently `karabiner` (Karabiner-Elements owns `automatic_backups/` and `assets/`). Stale files in a preserved directory are *not* cleaned up — remove them by hand.
   - Claude Code skills deploy from `env/.claude/skills/` to `~/.claude/skills/`. The copy is scoped one level down, at `skills/`, never at `~/.claude/` — the rm+copy would otherwise wipe settings, auth and per-project state that only live there.
+  - `env/.claude/CLAUDE.md` is copied file-by-file to `~/.claude/CLAUDE.md` for the same reason — user-level memory, which Claude Code merges with each project's own `CLAUDE.md`.
 - `dev-run` — Discovers and runs all executable `run/*.sh` scripts. Supports grep filtering. Pass `--real` to execute.
 - `dev-remove` — Inverse of `dev-run` for a single tool: uninstalls the Homebrew formula/cask (or global npm package) and deletes the matching `run/*.sh`, so `dev-run` won't reinstall it. Resolves the script by exact `run/<name>.sh` first, then by grepping `run/` (refuses if that matches more than one). Warns about config still tracked in `env/` but never deletes it. Pass `--real` to apply.
 - `dev-detox` — Weekly cleanup, unrelated to the other three. For each of `~/Desktop`, `~/Downloads` and `~/Documents` it collects the folder's contents into a dated staging folder (`desktop-<weekday>-YYYYMMDD/`, weekday from `LC_ALL=C date +%A`; `-2` suffix on same-day reruns) and trashes that one folder via Finder (`osascript` → `tell application "Finder" to delete`), so the Trash records the origin and Put Back restores the whole pile. Skips hidden files; honours the `KEEP=()` glob list at the top of the script. Pass `--real` to apply.
@@ -56,6 +57,7 @@ There are no build, test, or lint commands.
 - `.mbsyncrc` — Email sync (isync/mbsync) config
 - `.config/nvim/` — Neovim config (lazy.nvim plugin manager, Nord theme)
 - `intelephense/` — PHP LSP (Intelephense) license key directory
+- `.claude/CLAUDE.md` — User-level Claude Code memory, applied on top of every project's `CLAUDE.md`
 - `.claude/skills/` — Claude Code skills (`pr-log` — logs a GitHub PR into the Obsidian work journal)
 
 **`run/`** — Individual Homebrew/npm install scripts. All follow the same idempotent pattern: check `brew list`, upgrade if present, install if not.
