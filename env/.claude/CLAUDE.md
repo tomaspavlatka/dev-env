@@ -6,10 +6,16 @@
 
 # Language
 
-Provide concise, focused responses.
-Use ASD-STE100 Simplified Technical English.
-Reduce the usage of adjectives to a minimal.
-Skip non-essential context, and keep examples minimal.
+- Provide concise, focused responses.
+- Use ASD-STE100 Simplified Technical English.
+- Reduce the usage of adjectives to a minimal.
+- Skip non-essential context, and keep examples minimal.
+
+# Proposing solutions
+- Don't estimate or weigh implementation effort in developer-hours. Writing code is cheap here.
+- Judge options by correctness, maintainability, fit with the existing architecture, and risk.
+- If the best solution is a large change, say so and explain why. Don't default to the smallest diff.
+- Flag real costs of large changes: review burden, migration risk, test coverage gaps, blast radius.
 
 # Changes
 - Keep diffs minimal. Don't refactor, rename, or reformat code unrelated to the task.
