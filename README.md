@@ -200,6 +200,43 @@ These are still manual — `dev-env` only deploys `env/.config/*` and
 - **macOS privacy approvals** — Karabiner-Elements needs Input Monitoring and
   its driver extension approved; MonitorControl needs Accessibility.
 
+## Claude Code plugins
+
+`run/claude-plugins.sh` installs them. It is the only script in `run/` that
+touches no Homebrew package, and it exists because the state it manages lives
+in `~/.claude/settings.json` — a file `dev-env` deliberately does not deploy,
+since it also holds auth and per-project data.
+
+**The trap:** `claude plugin marketplace add <owner>/<repo>` only registers the
+catalogue. It installs nothing. The skills stay invisible until you also run:
+
+```bash
+claude plugin install <plugin>@<marketplace>
+```
+
+Check what is actually live:
+
+```bash
+claude plugin marketplace list   # catalogues registered
+claude plugin list               # plugins installed + enabled
+```
+
+To add one, put the marketplace in `MARKETPLACES` and the plugin in `PLUGINS`
+at the top of the script, then `./dev-run claude-plugins --real`. Re-running is
+safe — it updates whatever is already there.
+
+Currently installed:
+
+- `mattpocock-skills@mattpocock` (`mattpocock/skills`) — engineering skills:
+  tdd, code-review, grilling, domain-modeling and ~20 more.
+- `typescript-lsp@claude-plugins-official`
+
+Plugin skills are namespaced, so `mattpocock-skills:code-review` and the
+built-in `code-review` coexist. Say which one you mean.
+
+Skills in `env/.claude/skills/` are a separate mechanism — those `dev-env`
+copies straight to `~/.claude/skills/`, no plugin involved.
+
 ## Friday digital detox
 
 `./dev-detox` clears out `~/Desktop`, `~/Downloads` and `~/Documents`.
