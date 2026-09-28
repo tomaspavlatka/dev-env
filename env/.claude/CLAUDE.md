@@ -25,6 +25,12 @@
 - Don't add code comments unless the logic is non-obvious.
 - Don't create README, docs, or summary files unless I ask.
 
+# Pull request description
+- Write the body for what changed and why it changed. Leave out how.
+- Keep the body to 25 sentences or less.
+- No file-by-file walkthrough. The diff already shows that.
+- No test plans, checklists, or extra headings unless I ask.
+
 # Verification
 - Run relevant tests, lint, and typecheck before calling something done.
 - Never delete, skip, or weaken tests to make them pass.
