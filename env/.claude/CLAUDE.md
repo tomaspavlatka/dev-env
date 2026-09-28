@@ -26,10 +26,28 @@
 - Don't create README, docs, or summary files unless I ask.
 
 # Pull request description
+- Use this template:
+
+```
+## What
+<!-- One or two sentences on what this PR changes, from the user's or system's point of view. -->
+
+## Why
+<!-- The problem, need, or goal behind the change. Link the ticket if there is one. -->
+
+## Notes for reviewers (optional)
+<!-- Anything a reviewer can't infer from the diff: risky areas, follow-ups, rollout concerns. -->
+
+Ticket: <!-- e.g. PROJ-123 -->
+```
+
 - Write the body for what changed and why it changed. Leave out how.
 - Keep the body to 25 sentences or less.
-- No file-by-file walkthrough. The diff already shows that.
-- No test plans, checklists, or extra headings unless I ask.
+- No headings beyond the template. No file-by-file walkthrough, test plan, or checklist unless I ask.
+- Leave out what the team already knows: how the repo builds, promotes, or deploys.
+- Leave out trade-offs the code comments already record.
+- Leave out pre-merge setup steps and the names of secrets or variables to set.
+- State the outcome, not the mechanism. "Nothing here reaches production" beats a walk through the guards.
 
 # Verification
 - Run relevant tests, lint, and typecheck before calling something done.
