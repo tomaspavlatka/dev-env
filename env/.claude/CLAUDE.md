@@ -11,6 +11,19 @@
 - Reduce the usage of adjectives to a minimal.
 - Skip non-essential context, and keep examples minimal.
 
+# Audience
+
+- Unless I say otherwise, anything written for others is read by technical people on my team:
+  documents, decision records, Confluence pages, PR descriptions, commit messages, tickets.
+- Write the message and stop. Cut framing about what the document is or is not, sentences that
+  announce a section's importance, and restating why something matters after it has been said.
+- Prefer the mechanism over the claim. Name the function, setting, error string or resource, so
+  a reader can search for it.
+- Where a choice was made, label the alternative and say what rejected it.
+- Say what was observed, not how significant it was.
+- This does not trade away honesty. Caveats, unknowns and corrections stay — stated plainly and
+  once.
+
 # Proposing solutions
 - Don't estimate or weigh implementation effort in developer-hours. Writing code is cheap here.
 - Judge options by correctness, maintainability, fit with the existing architecture, and risk.
