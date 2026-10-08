@@ -35,7 +35,17 @@
 - Follow the conventions already in the file/repo, even if you'd do it differently.
 - No new dependencies without asking.
 - For changes touching more than ~3 files, propose a plan first.
-- Don't add code comments unless the logic is non-obvious.
+- Comments explain why, not what - unless the "what" is hard to read (URL building, a regex,
+  bit math).
+- A comment earns its place only if a future editor could break the code without it.
+- Name the mechanism: a function, a config value, a library constraint, an error string.
+  Never product rationale, user populations, process, or test strategy - that belongs in the
+  PR description or the ticket.
+- If a fact is already in the PR description, the ticket, or a design doc, it does not also
+  go in the code.
+- Match the file's comment style. Default to a 1-4 line block, single paragraph. No
+  multi-paragraph docblocks.
+- Don't comment a type alias, a prop type, or a self-naming function.
 - Don't create README, docs, or summary files unless I ask.
 
 # Pull request description
