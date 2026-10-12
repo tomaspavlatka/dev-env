@@ -15,6 +15,14 @@ if [ ! -d "$NVM_DIR/versions/node" ]; then
   exit 0
 fi
 
+# A Homebrew yarn lands in /opt/homebrew/bin and wins over these shims in any
+# shell that has not loaded nvm, where it then refuses a pinned packageManager.
+# There is deliberately no run/yarn.sh; this catches a manual `brew install yarn`.
+if brew list --formula 2>/dev/null | grep -qx yarn; then
+  echo "WARNING: Homebrew yarn is installed and shadows corepack. Remove it with"
+  echo "         ./dev-remove yarn --real"
+fi
+
 for node_bin in "$NVM_DIR"/versions/node/*/bin; do
   [ -x "$node_bin/corepack" ] || continue
 

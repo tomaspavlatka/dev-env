@@ -51,6 +51,9 @@ There are no build, test, or lint commands.
   - Image embeds are deliberately **not** rewritten. The page lives in the vault, so `![[name.webp]]` resolves on its own. Count occurrences, not lines — 2025-06-21 puts three embeds on one line.
 
 **`env/`** — Source of truth for all dotfiles:
+- `.zshenv` — Read by *every* zsh, not just interactive ones. Puts nvm's default node on
+  `PATH` without sourcing `nvm.sh`, so non-interactive shells (Neovim `:!`, a lazy.nvim
+  `build`, any script) get node and the corepack shims
 - `.zshrc` — Zsh config (Oh My Zsh + Powerlevel10k, fzf, zoxide, nvm)
 - `.tmux.conf` — Tmux config (Gruvbox dark, vim-style splits)
 - `.p10k.zsh` — Powerlevel10k prompt theme config
@@ -65,6 +68,10 @@ There are no build, test, or lint commands.
   - Exception: `nvm.sh` uses no Homebrew at all. nvm upstream refuses to support the brew formula, so the script pipes the official installer into bash, pinned to the newest GitHub release (with a hardcoded fallback tag when the API is unreachable). `PROFILE=/dev/null` keeps the installer out of the live `~/.zshrc` — the nvm hook is tracked in `env/.zshrc`. It `mkdir`s `~/.nvm` first, because `XDG_CONFIG_HOME` is set and the installer otherwise rejects a `$NVM_DIR` that isn't its own default (`~/.config/nvm`). It installs no node version; `nvm install --lts` is a manual step. `dev-remove nvm` deletes the script but cannot uninstall nvm — remove `~/.nvm` by hand. Note Homebrew's `node` is still present as a `mongosh` dependency; that is what nvm calls `system`.
   - Exception: `claude-plugins.sh` uses no Homebrew. It registers Claude Code marketplaces and installs the plugins from them, because `claude plugin marketplace add` only fetches the catalogue — the plugin still needs `claude plugin install <plugin>@<marketplace>`, and both facts are recorded in `~/.claude/settings.json`, which `dev-env` does not deploy. The marketplace and plugin lists are declared at the top of the script. It guards on `command -v claude` because `dev-run` uses `find`, so `claude-code.sh` is not guaranteed to run first. `dev-remove claude-plugins` will not work — there is no such brew package.
   - Exception: `corepack.sh` installs nothing. corepack ships inside every nvm-installed node, but its shims (`yarn`, `pnpm`) are linked per node version, so the script loops over `$NVM_DIR/versions/node/*/bin` and runs `corepack enable` for each. This is what makes a project's pinned `packageManager` (e.g. `yarn@4.12.0`) work instead of the global yarn. Re-run it after every `nvm install`. Homebrew's node ships no corepack at all.
+    There is **no `yarn.sh`** — a Homebrew yarn installs to `/opt/homebrew/bin/yarn` and
+    beats these shims wherever nvm has not loaded, then aborts on a pinned
+    `packageManager` with "the current global version of Yarn is 1.22.22". The script warns
+    if `brew list --formula` shows yarn again.
 
 **Root-level standalone scripts** (`forto-cli.sh`) — Same install pattern but *not* managed by `dev-run` (they live outside `run/`).
 

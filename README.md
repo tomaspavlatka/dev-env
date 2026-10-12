@@ -192,8 +192,9 @@ These are still manual — `dev-env` only deploys `env/.config/*` and
   mkdir -p ~/intelephense && cp env/intelephense/licence.txt ~/intelephense/
   ```
 - **Neovim first launch** — opening `nvim` clones lazy.nvim and builds plugins
-  (needs network + git). Install `yarn` *before* the first launch;
-  markdown-preview runs `yarn install` at build time.
+  (needs network + git). markdown-preview runs `yarn install` at build time, and
+  the only yarn on this machine is corepack's shim inside an nvm node — so
+  `nvm install --lts` and `./dev-run corepack --real` have to come first.
 - **pyright** — configured in `lua/tomaspavlatka/plugins/mason.lua` but never
   installed by anything. Run `:MasonInstall pyright` in Neovim (needs Python).
   The TypeScript server is covered by `run/typescript.sh`.
@@ -323,5 +324,4 @@ or LaTeX involved — Obsidian does the conversion.
 `.zshrc` picks these up if present, and silently skips them if not — none are
 installed by this repo:
 
-- nvm (`~/.nvm`)
 - Google Cloud SDK (`~/codebase/google-cloud-sdk`)
