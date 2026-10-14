@@ -238,6 +238,21 @@ built-in `code-review` coexist. Say which one you mean.
 Skills in `env/.claude/skills/` are a separate mechanism — those `dev-env`
 copies straight to `~/.claude/skills/`, no plugin involved.
 
+## Claude Code settings
+
+`run/claude-settings.sh` merges the keys it declares in `OWNED` into
+`~/.claude/settings.json` and leaves every other key in place. It owns
+`attribution`: empty `commit` and `pr` strings stop Claude Code adding the
+`Co-Authored-By` trailer to commits and the "Generated with Claude Code" line
+to PR descriptions.
+
+```bash
+./dev-run claude-settings --real
+```
+
+Taking a key out of `OWNED` does not delete it from the live file. Remove it
+there by hand.
+
 ## GitHub CLI extensions
 
 `run/gh-extensions.sh` installs them. `gh extension install` clones into
