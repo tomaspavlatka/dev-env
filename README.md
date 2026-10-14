@@ -203,8 +203,8 @@ These are still manual — `dev-env` only deploys `env/.config/*` and
 
 ## Claude Code plugins
 
-`run/claude-plugins.sh` installs them. It is the only script in `run/` that
-touches no Homebrew package, and it exists because the state it manages lives
+`run/claude-plugins.sh` installs them. It touches no Homebrew package, and it
+exists because the state it manages lives
 in `~/.claude/settings.json` — a file `dev-env` deliberately does not deploy,
 since it also holds auth and per-project data.
 
@@ -237,6 +237,27 @@ built-in `code-review` coexist. Say which one you mean.
 
 Skills in `env/.claude/skills/` are a separate mechanism — those `dev-env`
 copies straight to `~/.claude/skills/`, no plugin involved.
+
+## GitHub CLI extensions
+
+`run/gh-extensions.sh` installs them. `gh extension install` clones into
+`~/.local/share/gh/extensions`, which `dev-env` does not deploy, so the script is
+the only record. Run `gh auth login` first; the script skips itself until `gh`
+is logged in.
+
+To add one, put `<owner>/gh-<name>` in `EXTENSIONS` at the top of the script,
+then `./dev-run gh-extensions --real`. Re-running is safe — it upgrades whatever
+is already there.
+
+Check what is actually live:
+
+```bash
+gh extension list
+```
+
+Currently installed:
+
+- `github/gh-stack` — stacked pull requests (`gh stack init`, `add`, `submit`, `sync`).
 
 ## Friday digital detox
 
