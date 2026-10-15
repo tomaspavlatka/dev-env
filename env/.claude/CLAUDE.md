@@ -48,6 +48,12 @@
 - Don't comment a type alias, a prop type, or a self-naming function.
 - Don't create README, docs, or summary files unless I ask.
 
+# Branches and PR titles
+- Branch name: `bugfix/{ticket}-{short-slug}` for Bug tickets, `feature/{ticket}-{short-slug}`
+  for all other ticket types. Lowercase, e.g. `feature/iam-2794-add-jira-key-to-pr-body`.
+- PR title: `{TICKET}: {Title}`, e.g. `IAM-2794: Add a Jira key to the auth-sdk-models update PR body`.
+- If the repo's CLAUDE.md sets a different branch, commit, or PR title format, the repo format wins.
+
 # Pull request description
 - Use this template:
 
