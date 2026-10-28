@@ -70,8 +70,16 @@ forto_token() {
 }
 
 # One row per container: commit SHA (from the DD_GIT_COMMIT_SHA env var), readiness,
-# state, uptime and restarts. Namespace defaults to iam-user-service.
+# state, uptime and restarts. Namespace defaults to iam-user-service; -w refreshes every 5s.
 kpods() {
+  if [[ "$1" == "-w" ]]; then
+    shift
+    # watch runs its command through sh, which cannot see zsh functions, so -x hands
+    # a plain zsh this function's own source instead.
+    watch -n 5 -x zsh -c "$(functions kpods); kpods \"\$1\"" kpods "${1:-iam-user-service}"
+    return
+  fi
+
   local ns="${1:-iam-user-service}"
   kubectl get pods -n "$ns" -o json | jq -r '
     ["POD","COMMIT_SHA","READY","STATE","UPTIME","RESTARTS"],
