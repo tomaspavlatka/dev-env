@@ -27,16 +27,17 @@ fi
 for node_bin in "$NVM_DIR"/versions/node/*/bin; do
   node_version="$(basename "$(dirname "$node_bin")")"
 
-  if [ ! -x "$node_bin/corepack" ]; then
-    echo "corepack is not bundled with node $node_version. Installing..."
-    # npm -g installs into the running node's own prefix, so corepack lands in $node_bin.
-    PATH="$node_bin:$PATH" "$node_bin/npm" install -g corepack@latest || continue
-  fi
-
+  # Checked before the install below: the corepack npm package ships its own yarn bin.
   if [ -e "$node_bin/yarn" ]; then
     echo "corepack is already enabled for node $node_version. Re-linking shims..."
   else
     echo "corepack is not enabled for node $node_version. Enabling..."
+  fi
+
+  if [ ! -x "$node_bin/corepack" ]; then
+    echo "corepack is not bundled with node $node_version. Installing..."
+    # npm -g installs into the running node's own prefix, so corepack lands in $node_bin.
+    PATH="$node_bin:$PATH" "$node_bin/npm" install -g corepack@latest || continue
   fi
 
   # Run corepack through its own node, and let it drop the shims next to itself.
