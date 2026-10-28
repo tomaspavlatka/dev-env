@@ -69,6 +69,33 @@ forto_token() {
   echo "✅ FORTO_ARTIFACTS_TOKEN set, good for about an hour."
 }
 
+# One row per container: commit SHA (from the DD_GIT_COMMIT_SHA env var), readiness,
+# state, uptime and restarts. Namespace defaults to iam-user-service.
+kpods() {
+  local ns="${1:-iam-user-service}"
+  kubectl get pods -n "$ns" -o json | jq -r '
+    ["POD","COMMIT_SHA","READY","STATE","UPTIME","RESTARTS"],
+    (.items[] as $p
+     | (($p.status.containerStatuses // []) | map(select(.ready)) | length) as $readyCount
+     | ($p.spec.containers | length) as $total
+     | $p.spec.containers[] as $c
+     | (($p.status.containerStatuses // []) | map(select(.name == $c.name)) | .[0]) as $s
+     | (($s.state // {}) | keys[0] // "unknown") as $state
+     | (if $state == "waiting" then "waiting:" + ($s.state.waiting.reason // "?")
+        elif $state == "terminated" then "terminated:" + ($s.state.terminated.reason // "?")
+        else $state end) as $stateLabel
+     | (if $state == "running"
+        then ((now - ($s.state.running.startedAt | fromdateiso8601)) | floor) as $u
+             | "\($u / 3600 | floor)h\(($u % 3600) / 60 | floor)m"
+        else "-" end) as $uptime
+     | [$p.metadata.name,
+        (($c.env // []) | map(select(.name == "DD_GIT_COMMIT_SHA").value) | .[0] // "-"),
+        "\($readyCount)/\($total)",
+        $stateLabel, $uptime,
+        (($s.restartCount // 0) | tostring)]
+    ) | @tsv' | column -t -s $'\t'
+}
+
 # 6. Aliases
 alias v="nvim"
 alias vim="nvim"
