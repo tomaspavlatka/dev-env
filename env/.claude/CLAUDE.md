@@ -24,6 +24,21 @@
 - This does not trade away honesty. Caveats, unknowns and corrections stay — stated plainly and
   once.
 
+# Texts for people (ADRs, updates, Slack posts, Confluence pages)
+
+- For these texts, this section overrides the STE rule in Language and the "write the message and
+  stop" and "say what was observed" rules in Audience. Code comments, commit messages and PR
+  descriptions keep those rules.
+- Open with the story in 2-3 sentences: what problem we had, what we decided, what changes for the
+  reader.
+- Connect facts with their reasons ("because", "so", "which means"). Don't list them bare.
+- Write in first person where it is my view or decision ("I chose X because…", "we learned…").
+- Say what I think matters most, and why.
+- Keep it short. Facts stay exact and searchable.
+- Before drafting, ask me two questions: what is the one thing the reader should take away, and
+  what surprised me? Use my answers in my words.
+- Mark one spot `[Tomas: your take]` where I add a sentence of my own before sharing.
+
 # Proposing solutions
 - Don't estimate or weigh implementation effort in developer-hours. Writing code is cheap here.
 - Judge options by correctness, maintainability, fit with the existing architecture, and risk.
