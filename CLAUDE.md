@@ -61,7 +61,7 @@ There are no build, test, or lint commands.
 - `.config/nvim/` — Neovim config (lazy.nvim plugin manager, Nord theme)
 - `intelephense/` — PHP LSP (Intelephense) license key directory
 - `.claude/CLAUDE.md` — User-level Claude Code memory, applied on top of every project's `CLAUDE.md`
-- `.claude/skills/` — Claude Code skills (`pr-log` — logs a GitHub PR into the Obsidian work journal)
+- `.claude/skills/` — Claude Code skills (`pr-log` — logs a GitHub PR into the Obsidian work journal; `gpsh` — commits all changes and pushes)
 
 **`run/`** — Individual Homebrew/npm install scripts. All follow the same idempotent pattern: check `brew list`, upgrade if present, install if not.
   - Exception: `tfenv.sh` installs Terraform too, not just the named package. Terraform is no longer installable from Homebrew (dropped from homebrew-core after the BUSL relicense; `hashicorp/tap` fails to load under Homebrew 7), so the script installs `tfenv` via brew and then `tfenv install latest`. There is no `terraform.sh`.
