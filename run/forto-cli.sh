@@ -14,6 +14,9 @@ if ! gh auth status >/dev/null 2>&1; then
 fi
 
 brew tap freight-hub/internal || exit 1
+# Homebrew 7 refuses to load formulae from non-official taps until trusted.
+# Trust only this formula, not the whole tap.
+brew trust --formula freight-hub/internal/forto-cli || exit 1
 if brew list --formula | grep -q "^forto-cli$"; then
   echo "forto-cli is already installed. Attempting to update..."
   brew upgrade forto-cli
