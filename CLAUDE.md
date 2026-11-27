@@ -75,7 +75,7 @@ There are no build, test, or lint commands.
     `packageManager` with "the current global version of Yarn is 1.22.22". The script warns
     if `brew list --formula` shows yarn again.
 
-**Root-level standalone scripts** (`forto-cli.sh`) — Same install pattern but *not* managed by `dev-run` (they live outside `run/`).
+  - Exception: `forto-cli.sh` first runs `brew tap freight-hub/internal`, a private repo. Git fetches it through `gh auth git-credential` (set in `gitconfig/.gitconfig`), so the script guards on `command -v gh` and `gh auth status`, like `gh-extensions.sh`.
 
 ## Neovim Config Structure
 

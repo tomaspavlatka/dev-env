@@ -184,9 +184,9 @@ These are still manual — `dev-env` only deploys `env/.config/*` and
   ```
   `~/.gitconfig` includes `~/.gitconfig-work` for `~/codebase/forto/`, so both
   files are needed.
-- **GitHub CLI** — `gh.sh` and `forto-cli.sh` sit at the repo root, *outside*
-  `run/`, so `dev-run` never executes them. Run them by hand. `gh` is also
-  required by `.gitconfig`'s credential helper, so follow with `gh auth login`.
+- **GitHub CLI login** — run `gh auth login`. `.gitconfig`'s credential helper
+  needs it, and `run/forto-cli.sh` skips itself until it is done (its tap is
+  private), so re-run `./dev-run forto-cli --real` afterwards.
 - **Intelephense licence** — `env/intelephense/licence.txt` is not deployed:
   ```bash
   mkdir -p ~/intelephense && cp env/intelephense/licence.txt ~/intelephense/
